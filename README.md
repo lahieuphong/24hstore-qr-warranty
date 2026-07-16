@@ -5,11 +5,21 @@ Hệ thống quản lý sản phẩm và mã QR bảo hành theo IMEI, được 
 ## Chức năng chính
 
 - Quản lý sản phẩm, IMEI và trạng thái bảo hành.
-- Tạo mã QR và tra cứu thông tin bảo hành.
+- Tạo mã QR và tra cứu thông tin bảo hành công khai.
 - Import danh sách sản phẩm từ Excel hoặc CSV.
 - Xuất tem QR đơn lẻ hoặc hàng loạt dưới dạng PDF.
 - Quản lý người dùng và phân quyền nội bộ.
-- Xem các bảng dữ liệu nghiệp vụ trong trang quản trị dành cho super-admin.
+- Xem các bảng dữ liệu nghiệp vụ ở chế độ chỉ đọc dành cho `super-admin`.
+
+## Tổ chức mã nguồn
+
+Dự án vẫn là một Laravel monolith, nhưng phần trình bày được tách rõ để dễ tìm và bảo trì:
+
+- **Admin (nội bộ):** controller tại `App\Http\Controllers\Admin`, Livewire tại `App\Livewire\Admin`, view tại `resources/views/admin` và route tại `routes/admin.php`.
+- **Frontend (công khai):** controller tại `App\Http\Controllers\Frontend`, view tại `resources/views/frontend` và route công khai tại `routes/web.php`.
+- **Dùng chung:** model, enum, policy, service và command nằm trong các thư mục tương ứng dưới `app`; cả Admin và Frontend đều có thể sử dụng phần này.
+
+Việc tách thư mục trên là tách theo trách nhiệm trong cùng ứng dụng, không phải tách thành hai dự án hoặc thêm một API không cần thiết. Xem chi tiết tại [Kiến trúc](docs/ARCHITECTURE.md) và [Cấu trúc dự án](docs/PROJECT-STRUCTURE.md).
 
 ## Yêu cầu môi trường
 
@@ -61,35 +71,30 @@ php artisan storage:link
 composer run dev
 ```
 
-Sau đó truy cập:
+Các địa chỉ chính:
 
 ```text
-http://127.0.0.1:8000
+Điểm vào ứng dụng:        http://127.0.0.1:8000
+Trang quản trị:           http://127.0.0.1:8000/admin
+Quản lý dữ liệu chỉ đọc:  http://127.0.0.1:8000/admin/data
+Tra cứu từ mã QR:         http://127.0.0.1:8000/bao-hanh/{qr_token}
 ```
 
-## Đăng nhập quản trị
+Tài khoản quản trị mặc định:
 
 ```text
 Email: admin@24hstore.local
 Mật khẩu: ChangeMeNow!2026
 ```
 
-Nên đổi mật khẩu mặc định sau lần đăng nhập đầu tiên.
-
-## Xem dữ liệu hệ thống
-
-Tài khoản có vai trò `super-admin` có thể truy cập:
-
-```text
-http://127.0.0.1:8000/admin/data
-```
-
-Trang này hỗ trợ xem, tìm kiếm, sắp xếp và phân trang cho các bảng nghiệp vụ. Đây là chế độ chỉ đọc; mật khẩu, token đăng nhập, bảng cache, session và queue không được hiển thị.
+Nên đổi mật khẩu mặc định sau lần đăng nhập đầu tiên. Trang `/admin/data` chỉ dành cho `super-admin`; mật khẩu, token đăng nhập và các bảng hạ tầng như cache, session, queue không được hiển thị.
 
 ## Kiểm thử
+
+Chạy toàn bộ test:
 
 ```bash
 php artisan test
 ```
 
-Để dừng ứng dụng đang chạy, quay lại Terminal và nhấn `Ctrl + C`.
+Test được chia theo phạm vi `Admin`, `Frontend`, `Application` và `Domain` trong thư mục `tests`. Để dừng ứng dụng đang chạy, quay lại Terminal và nhấn `Ctrl + C`.

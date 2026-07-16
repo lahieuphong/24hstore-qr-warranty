@@ -4,7 +4,7 @@ Ngày kiểm tra: 16/07/2026.
 
 ## Đã kiểm tra
 
-- `php artisan test`: 10 test vượt qua với 34 assertion.
+- `php artisan test --env=testing`: 16 test vượt qua với 54 assertion.
 - `vendor/bin/pint --test`: mã PHP đạt chuẩn định dạng Laravel Pint.
 - `composer validate --no-check-publish`: `composer.json` hợp lệ.
 - `npm run build`: Vite/Tailwind build production thành công với 55 module.
