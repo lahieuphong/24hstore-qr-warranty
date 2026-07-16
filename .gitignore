@@ -1,0 +1,57 @@
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+/auth.json
+/storage/*.key
+
+# PHP / Composer dependencies and caches
+/vendor/
+/.phpunit.cache/
+/.phpunit.result.cache
+/.php-cs-fixer.cache
+/.phpactor.json
+/.phpstan.cache/
+/.pint.cache
+
+# JavaScript dependencies and build output
+/node_modules/
+/public/build/
+/public/hot
+/public/storage
+
+# Laravel runtime files
+/bootstrap/cache/*.php
+/storage/pail/
+*.log
+
+# Local databases
+/database/*.sqlite
+/database/*.sqlite-*
+/database/*.sqlite3
+/database/*.sqlite3-*
+
+# Test and coverage output
+/coverage/
+/.coverage
+
+# Package-manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local development environments
+/Homestead.json
+/Homestead.yaml
+/.fleet/
+/.idea/
+/.vscode/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
