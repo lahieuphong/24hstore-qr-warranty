@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductsTemplateController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WarrantyLookupController;
 use App\Livewire\Dashboard;
+use App\Livewire\DataAdmin\Index as DataAdminIndex;
 use App\Livewire\Imports\Index as ImportIndex;
 use App\Livewire\Products\Index as ProductIndex;
 use App\Livewire\Profile;
@@ -61,6 +62,10 @@ Route::middleware(['auth', 'active'])->group(function (): void {
         Route::get('/users', UserIndex::class)
             ->middleware('permission:users.manage')
             ->name('users.index');
+
+        Route::get('/data', DataAdminIndex::class)
+            ->middleware('role:super-admin')
+            ->name('data.index');
 
         Route::get('/profile', Profile::class)->name('profile');
     });

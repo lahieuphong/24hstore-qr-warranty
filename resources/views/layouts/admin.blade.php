@@ -49,6 +49,11 @@
                         <span class="w-5 text-center">♙</span> Người dùng
                     </a>
                 @endcan
+                @if (auth()->user()->hasRole('super-admin'))
+                    <a href="{{ route('admin.data.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 font-semibold {{ request()->routeIs('admin.data.*') ? 'bg-indigo-500 text-white' : 'text-slate-300 hover:bg-slate-900 hover:text-white' }}">
+                        <span class="w-5 text-center">▤</span> Quản lý dữ liệu
+                    </a>
+                @endif
             </nav>
 
             <div class="border-t border-slate-800 p-4">

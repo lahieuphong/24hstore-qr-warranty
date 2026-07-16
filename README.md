@@ -9,6 +9,7 @@ Hệ thống quản lý sản phẩm và mã QR bảo hành theo IMEI, được 
 - Import danh sách sản phẩm từ Excel hoặc CSV.
 - Xuất tem QR đơn lẻ hoặc hàng loạt dưới dạng PDF.
 - Quản lý người dùng và phân quyền nội bộ.
+- Xem các bảng dữ liệu nghiệp vụ trong trang quản trị dành cho super-admin.
 
 ## Yêu cầu môi trường
 
@@ -74,6 +75,16 @@ Mật khẩu: ChangeMeNow!2026
 ```
 
 Nên đổi mật khẩu mặc định sau lần đăng nhập đầu tiên.
+
+## Xem dữ liệu hệ thống
+
+Tài khoản có vai trò `super-admin` có thể truy cập:
+
+```text
+http://127.0.0.1:8000/admin/data
+```
+
+Trang này hỗ trợ xem, tìm kiếm, sắp xếp và phân trang cho các bảng nghiệp vụ. Đây là chế độ chỉ đọc; mật khẩu, token đăng nhập, bảng cache, session và queue không được hiển thị.
 
 ## Kiểm thử
 
