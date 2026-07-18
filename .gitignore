@@ -2,56 +2,75 @@
 .env
 .env.*
 !.env.example
+!.env.production.example
 !.env.*.example
-/auth.json
-/storage/*.key
+auth.json
 
-# PHP / Composer dependencies and caches
-/vendor/
-/.phpunit.cache/
-/.phpunit.result.cache
-/.php-cs-fixer.cache
-/.phpactor.json
-/.phpstan.cache/
-/.pint.cache
+# PHP / Composer dependencies and local tools
+vendor/
+composer.phar
+.phpunit.cache/
+.phpunit.result.cache
+.pest.cache/
+.php-cs-fixer.cache
+.phpactor.json
+.phpstan.cache/
+.pint.cache
+coverage/
+.coverage
 
-# JavaScript dependencies and build output
-/node_modules/
-/public/build/
-/public/hot
-/public/storage
+# Yarn / Node dependencies and caches
+node_modules/
+yarn-error.log
+yarn-debug.log
+.yarn-cache/
+.vite/
 
-# Laravel runtime files
-/bootstrap/cache/*.php
-/storage/pail/
+# Keep backend/yarn.lock and frontend/yarn.lock under version control.
+
+# Laravel and Vite generated files
+/backend/public/build/
+/frontend/public/build/
+/backend/public/hot
+/frontend/public/hot
+/backend/public/storage
+/frontend/public/storage
+/backend/storage/*.key
+/frontend/storage/*.key
+/backend/storage/pail/
+/frontend/storage/pail/
+
+# Local VM configuration
+Homestead.json
+Homestead.yaml
+
+# Local databases and database dumps
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.dump
+*.sql
+*.sql.gz
+
+# Logs and temporary files
 *.log
-
-# Local databases
-/database/*.sqlite
-/database/*.sqlite-*
-/database/*.sqlite3
-/database/*.sqlite3-*
-
-# Test and coverage output
-/coverage/
-/.coverage
-
-# Package-manager debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Local development environments
-/Homestead.json
-/Homestead.yaml
-/.fleet/
-/.idea/
-/.vscode/
-
-# Operating-system and editor files
-.DS_Store
-Thumbs.db
+*.pid
+*.tmp
+*.temp
 *.swp
 *.swo
 *~
+
+# IDEs and editors
+.idea/
+.vscode/
+.fleet/
+
+# Operating-system metadata
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,17 @@
+[Unit]
+Description=24hStore QR Warranty backend queue worker
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+WorkingDirectory=/var/www/24hstore-qr-warranty/backend
+ExecStart=/usr/bin/php artisan queue:work --sleep=3 --tries=3 --timeout=120 --max-time=3600
+StandardOutput=append:/var/www/24hstore-qr-warranty/backend/storage/logs/worker.log
+StandardError=append:/var/www/24hstore-qr-warranty/backend/storage/logs/worker-error.log
+
+[Install]
+WantedBy=multi-user.target

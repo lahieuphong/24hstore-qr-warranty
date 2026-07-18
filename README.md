@@ -1,100 +1,125 @@
-# 24hStore QR Warranty
+# 24hStore QR Warranty - Backend + Frontend
 
-Hệ thống quản lý sản phẩm và mã QR bảo hành theo IMEI, được xây dựng bằng Laravel, Livewire và Tailwind CSS.
+Bản source này đã được tách thành hai ứng dụng deploy độc lập:
 
-## Chức năng chính
+- `backend/`: Laravel 12 + Livewire 4, kết nối MySQL/PostgreSQL, cung cấp REST API và trang quản trị custom tại `/admin`.
+- `frontend/`: Laravel 12 + Livewire 4, chỉ hiển thị trang tra cứu QR/IMEI và gọi backend qua API; **không có database riêng**.
 
-- Quản lý sản phẩm, IMEI và trạng thái bảo hành.
-- Tạo mã QR và tra cứu thông tin bảo hành công khai.
-- Import danh sách sản phẩm từ Excel hoặc CSV.
-- Xuất tem QR đơn lẻ hoặc hàng loạt dưới dạng PDF.
-- Quản lý người dùng và phân quyền nội bộ.
-- Xem các bảng dữ liệu nghiệp vụ ở chế độ chỉ đọc dành cho `super-admin`.
+## 1. Kiến trúc chạy thật
 
-## Tổ chức mã nguồn
+```text
+Nhân viên kho
+    -> https://admin-warranty.example.com/admin
+    -> Backend Livewire
+    -> MySQL/PostgreSQL
 
-Dự án vẫn là một Laravel monolith, nhưng phần trình bày được tách rõ để dễ tìm và bảo trì:
-
-- **Admin (nội bộ):** controller tại `App\Http\Controllers\Admin`, Livewire tại `App\Livewire\Admin`, view tại `resources/views/admin` và route tại `routes/admin.php`.
-- **Frontend (công khai):** controller tại `App\Http\Controllers\Frontend`, view tại `resources/views/frontend` và route công khai tại `routes/web.php`.
-- **Dùng chung:** model, enum, policy, service và command nằm trong các thư mục tương ứng dưới `app`; cả Admin và Frontend đều có thể sử dụng phần này.
-
-Việc tách thư mục trên là tách theo trách nhiệm trong cùng ứng dụng, không phải tách thành hai dự án hoặc thêm một API không cần thiết. Xem chi tiết tại [Kiến trúc](docs/ARCHITECTURE.md) và [Cấu trúc dự án](docs/PROJECT-STRUCTURE.md).
-
-## Yêu cầu môi trường
-
-- PHP 8.4 trở lên.
-- Composer 2.
-- Node.js 22 trở lên và npm.
-- SQLite cho môi trường local.
-
-## Cài đặt lần đầu
-
-Mở Terminal tại thư mục dự án. Nếu chưa có file `.env`, tạo từ file mẫu:
-
-```bash
-cp .env.example .env
+Khách quét QR
+    -> https://warranty.example.com/bao-hanh/{uuid}
+    -> Frontend Livewire
+    -> Backend API /api/v1/warranties/{uuid}
+    -> MySQL/PostgreSQL
 ```
 
-Tạo database SQLite:
+QR do backend tạo sẽ dùng `FRONTEND_URL`, vì vậy không phụ thuộc đường dẫn máy cá nhân và không chứa IMEI trong URL.
 
-```bash
-touch database/database.sqlite
-```
+## 2. Trang quản trị custom kiểu Django Admin
 
-Cập nhật các dòng sau trong `.env`:
+Backend có:
+
+- Trang Administration chia theo module: Bảo hành & kho, Xác thực & phân quyền, Vận hành hệ thống.
+- Liên kết “Xem / sửa” và “Thêm mới” theo từng resource.
+- Dashboard số lượng theo bốn trạng thái bảo hành.
+- Recent actions và trang nhật ký hoạt động quản trị.
+- CRUD sản phẩm, tìm kiếm, lọc, sắp xếp, chọn hàng loạt, QR/PDF.
+- Import Excel/CSV và báo lỗi theo dòng.
+- Quản lý tài khoản, vai trò và khóa/mở tài khoản.
+- Kiểm tra trạng thái database, queue/cache và quyền ghi storage.
+
+Chi tiết: [`docs/CUSTOM-ADMIN.md`](docs/CUSTOM-ADMIN.md).
+
+## 3. Database production
+
+Backend mặc định dùng MySQL:
 
 ```dotenv
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://127.0.0.1:8000
-
-DB_CONNECTION=sqlite
-DB_DATABASE=/duong-dan-den-du-an/database/database.sqlite
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=qr_warranty
+DB_USERNAME=qr_warranty
+DB_PASSWORD=...
 ```
 
-Thay `/duong-dan-den-du-an` bằng đường dẫn tuyệt đối tới thư mục dự án trên máy.
+Có thể chuyển sang PostgreSQL bằng `DB_CONNECTION=pgsql` và đổi port/credential tương ứng. Không dùng đường dẫn database tuyệt đối của máy cá nhân. SQLite chỉ được cấu hình `:memory:` trong test tự động của backend, không tạo file database và không dùng khi deploy.
 
-## Cài dependencies và khởi tạo dữ liệu
+Frontend không có migration/model Eloquent, session và cache dùng file, queue dùng sync.
+
+## 4. Chạy local
+
+### 4.1 Backend
 
 ```bash
+cd backend
+cp .env.example .env
+# sửa DB_* và FRONTEND_URL=http://localhost:8001
 composer install
-npm install
 php artisan key:generate
 php artisan migrate --seed
-php artisan storage:link
+yarn install --frozen-lockfile
+yarn build
+php artisan serve --port=8000
 ```
 
-## Chạy ứng dụng
+Trang quản trị: `http://localhost:8000/admin`.
+
+### 4.2 Frontend
+
+Mở terminal khác:
 
 ```bash
-composer run dev
+cd frontend
+cp .env.example .env
+# BACKEND_API_URL=http://localhost:8000/api/v1
+composer install
+php artisan key:generate
+yarn install --frozen-lockfile
+yarn build
+php artisan serve --port=8001
 ```
 
-Các địa chỉ chính:
+Trang tra cứu: `http://localhost:8001`.
+
+## 5. API public
 
 ```text
-Điểm vào ứng dụng:        http://127.0.0.1:8000
-Trang quản trị:           http://127.0.0.1:8000/admin
-Quản lý dữ liệu chỉ đọc:  http://127.0.0.1:8000/admin/data
-Tra cứu từ mã QR:         http://127.0.0.1:8000/bao-hanh/{qr_token}
+GET /api/v1/health
+GET /api/v1/warranties/{qr_token}
+GET /api/v1/warranties/search?imei={imei}
 ```
 
-Tài khoản quản trị mặc định:
+API chỉ trả các trường công khai; `internal_note`, tài khoản tạo/cập nhật và dữ liệu phân quyền không xuất hiện trong response.
 
-```text
-Email: admin@24hstore.local
-Mật khẩu: ChangeMeNow!2026
-```
+## 6. Deploy server
 
-Nên đổi mật khẩu mặc định sau lần đăng nhập đầu tiên. Trang `/admin/data` chỉ dành cho `super-admin`; mật khẩu, token đăng nhập và các bảng hạ tầng như cache, session, queue không được hiển thị.
+Khuyến nghị hai subdomain:
 
-## Kiểm thử
+- `admin-warranty.example.com` -> `backend/public`
+- `warranty.example.com` -> `frontend/public`
 
-Chạy toàn bộ test:
+Hướng dẫn chi tiết và Nginx mẫu: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+## 7. Kiểm thử và kiểm tra source
 
 ```bash
-php artisan test
+cd backend && php artisan test
+cd ../frontend && php artisan test
 ```
 
-Test được chia theo phạm vi `Admin`, `Frontend`, `Application` và `Domain` trong thư mục `tests`. Để dừng ứng dụng đang chạy, quay lại Terminal và nhấn `Ctrl + C`.
+Kiểm tra format:
+
+```bash
+cd backend && ./vendor/bin/pint --test
+cd ../frontend && ./vendor/bin/pint --test
+```
+
+Bản đóng gói không kèm `vendor/`, `node_modules/` hoặc file `.env`; server sẽ cài dependency qua Composer và Yarn từ `composer.json`, `package.json` và `yarn.lock`.
