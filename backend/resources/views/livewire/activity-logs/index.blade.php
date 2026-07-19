@@ -12,7 +12,7 @@
             <label class="relative block">
                 <span class="sr-only">Tìm hoạt động</span>
                 <input wire:model.live.debounce.350ms="search" class="form-input pl-10" placeholder="Tìm mô tả, người thao tác...">
-                <span class="pointer-events-none absolute left-3 top-2.5 text-slate-400">⌕</span>
+                <x-lucide-search class="pointer-events-none absolute left-3 top-3 size-4 text-slate-400" aria-hidden="true" />
             </label>
             <select wire:model.live="action" class="form-input">
                 <option value="">Tất cả hành động</option>

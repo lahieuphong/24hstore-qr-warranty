@@ -6,7 +6,10 @@
             <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Người dùng và phân quyền</h1>
             <p class="mt-2 text-sm text-slate-500">Tạo tài khoản nhân viên, gán vai trò và khóa quyền truy cập khi cần.</p>
         </div>
-        <button type="button" wire:click="create" class="btn-primary">+ Thêm người dùng</button>
+        <button type="button" wire:click="create" class="btn-primary">
+            <x-lucide-plus class="size-4" aria-hidden="true" />
+            Thêm người dùng
+        </button>
     </div>
 
     <section class="card p-4 sm:p-5">
@@ -76,7 +79,9 @@
                         <h2 class="text-xl font-black text-slate-900">{{ $editingId ? 'Cập nhật người dùng' : 'Thêm người dùng' }}</h2>
                         <p class="mt-1 text-sm text-slate-500">Mỗi tài khoản được gán một vai trò nghiệp vụ.</p>
                     </div>
-                    <button type="button" wire:click="closeForm" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100">✕</button>
+                    <button type="button" wire:click="closeForm" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Đóng">
+                        <x-lucide-x class="size-5" aria-hidden="true" />
+                    </button>
                 </div>
 
                 <form wire:submit="save" class="p-6">

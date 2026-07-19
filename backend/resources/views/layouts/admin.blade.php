@@ -41,9 +41,7 @@
                 aria-controls="admin-mobile-menu"
                 aria-label="Mở menu quản trị"
             >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5" aria-hidden="true">
-                    <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
-                </svg>
+                <x-lucide-menu class="size-5" aria-hidden="true" />
             </button>
 
             <div class="hidden items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/90 lg:flex">
@@ -84,7 +82,10 @@
                     <a href="{{ route('admin.activity.index') }}" class="django-mobile-nav-link">Hoạt động quản trị</a>
                 @endcan
                 <a href="{{ route('admin.profile') }}" class="django-mobile-nav-link">Hồ sơ / Đổi mật khẩu</a>
-                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-mobile-nav-link">Mở trang tra cứu ↗</a>
+                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-mobile-nav-link flex items-center gap-2">
+                    Mở trang tra cứu
+                    <x-lucide-external-link class="size-4" aria-hidden="true" />
+                </a>
                 <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-white/15 pt-2">
                     @csrf
                     <button type="submit" class="django-mobile-nav-link w-full text-left">Đăng xuất</button>
@@ -97,14 +98,10 @@
         <nav class="mx-auto flex min-h-10 max-w-[1600px] items-center gap-2 px-4 text-xs sm:px-6 lg:px-8" aria-label="Breadcrumb">
             <a href="{{ url('/admin').'/' }}" class="font-semibold text-white hover:underline">Trang chủ</a>
             @unless (request()->routeIs('admin.dashboard'))
-                <svg viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-white/60" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M7.22 14.78a.75.75 0 0 1 0-1.06L10.94 10 7.22 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd" />
-                </svg>
+                <x-lucide-chevron-right class="size-4 text-white/60" aria-hidden="true" />
                 @if ($breadcrumbSection)
                     <span class="font-medium text-white/75">{{ $breadcrumbSection }}</span>
-                    <svg viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-white/60" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M7.22 14.78a.75.75 0 0 1 0-1.06L10.94 10 7.22 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd" />
-                    </svg>
+                    <x-lucide-chevron-right class="size-4 text-white/60" aria-hidden="true" />
                 @endif
                 <span class="font-medium text-white/90">{{ $title ?? 'Administration' }}</span>
             @endunless

@@ -14,7 +14,9 @@
         <div class="pointer-events-none absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 20% 20%, rgba(129,140,248,.8), transparent 28%), radial-gradient(circle at 80% 0%, rgba(56,189,248,.45), transparent 30%), radial-gradient(circle at 70% 80%, rgba(168,85,247,.35), transparent 28%);"></div>
         <header class="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
             <a href="{{ route('home') }}" class="flex items-center gap-3 text-white">
-                <span class="grid size-11 place-items-center rounded-2xl bg-white/10 font-black ring-1 ring-white/20 backdrop-blur">QR</span>
+                <span class="grid size-11 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur">
+                    <x-lucide-qr-code class="size-6" aria-hidden="true" />
+                </span>
                 <span>
                     <span class="block text-sm font-black">24hStore</span>
                     <span class="block text-xs text-indigo-200">Tra cứu bảo hành</span>

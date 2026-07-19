@@ -66,6 +66,25 @@ body {
     @apply mb-1.5 block text-sm font-semibold text-slate-700;
 }
 
+.login-password-input[type='password'] {
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+}
+
+.login-password-input[type='text'] {
+    font-size: 0.875rem;
+    letter-spacing: normal;
+}
+
+.login-checkbox {
+    @apply size-4 cursor-pointer rounded border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2;
+    accent-color: var(--admin-header);
+}
+
+.login-checkbox:hover {
+    accent-color: var(--admin-link-hover);
+}
+
 .btn-primary {
     @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
     background: var(--admin-header);

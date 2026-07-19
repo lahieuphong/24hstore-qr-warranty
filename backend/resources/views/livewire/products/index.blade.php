@@ -11,7 +11,10 @@
                 <a href="{{ route('admin.imports.index') }}" class="btn-secondary">Import Excel</a>
             @endcan
             @can('products.create')
-                <button type="button" wire:click="create" class="btn-primary">+ Thêm sản phẩm</button>
+                <button type="button" wire:click="create" class="btn-primary">
+                    <x-lucide-plus class="size-4" aria-hidden="true" />
+                    Thêm sản phẩm
+                </button>
             @endcan
         </div>
     </div>
@@ -83,14 +86,56 @@
                 <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
                     <tr>
                         <th class="w-12 px-4 py-3"><span class="sr-only">Chọn</span></th>
-                        <th class="min-w-64 px-4 py-3">
-                            <button type="button" wire:click="sortBy('name')" class="hover:text-slate-900">Sản phẩm ↕</button>
+                        <th
+                            class="min-w-64 px-4 py-3"
+                            aria-sort="{{ $sortField === 'name' ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none' }}"
+                        >
+                            <button type="button" wire:click="sortBy('name')" class="inline-flex items-center gap-1 hover:text-slate-900">
+                                Sản phẩm
+                                @if ($sortField === 'name')
+                                    @if ($sortDirection === 'asc')
+                                        <x-lucide-arrow-up class="size-4" aria-hidden="true" />
+                                    @else
+                                        <x-lucide-arrow-down class="size-4" aria-hidden="true" />
+                                    @endif
+                                @else
+                                    <x-lucide-arrow-up-down class="size-4" aria-hidden="true" />
+                                @endif
+                            </button>
                         </th>
-                        <th class="min-w-44 px-4 py-3">
-                            <button type="button" wire:click="sortBy('imei')" class="hover:text-slate-900">IMEI ↕</button>
+                        <th
+                            class="min-w-44 px-4 py-3"
+                            aria-sort="{{ $sortField === 'imei' ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none' }}"
+                        >
+                            <button type="button" wire:click="sortBy('imei')" class="inline-flex items-center gap-1 hover:text-slate-900">
+                                IMEI
+                                @if ($sortField === 'imei')
+                                    @if ($sortDirection === 'asc')
+                                        <x-lucide-arrow-up class="size-4" aria-hidden="true" />
+                                    @else
+                                        <x-lucide-arrow-down class="size-4" aria-hidden="true" />
+                                    @endif
+                                @else
+                                    <x-lucide-arrow-up-down class="size-4" aria-hidden="true" />
+                                @endif
+                            </button>
                         </th>
-                        <th class="min-w-32 px-4 py-3">
-                            <button type="button" wire:click="sortBy('warehouse_date')" class="hover:text-slate-900">Nhập kho ↕</button>
+                        <th
+                            class="min-w-32 px-4 py-3"
+                            aria-sort="{{ $sortField === 'warehouse_date' ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none' }}"
+                        >
+                            <button type="button" wire:click="sortBy('warehouse_date')" class="inline-flex items-center gap-1 hover:text-slate-900">
+                                Nhập kho
+                                @if ($sortField === 'warehouse_date')
+                                    @if ($sortDirection === 'asc')
+                                        <x-lucide-arrow-up class="size-4" aria-hidden="true" />
+                                    @else
+                                        <x-lucide-arrow-down class="size-4" aria-hidden="true" />
+                                    @endif
+                                @else
+                                    <x-lucide-arrow-up-down class="size-4" aria-hidden="true" />
+                                @endif
+                            </button>
                         </th>
                         <th class="min-w-40 px-4 py-3">Bảo hành</th>
                         <th class="min-w-36 px-4 py-3">Trạng thái</th>
@@ -182,7 +227,9 @@
                         <h2 class="text-xl font-black text-slate-900">{{ $editingId ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm' }}</h2>
                         <p class="mt-1 text-sm text-slate-500">QR được tạo tự động; IMEI không được trùng.</p>
                     </div>
-                    <button type="button" wire:click="closeForm" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Đóng">✕</button>
+                    <button type="button" wire:click="closeForm" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Đóng">
+                        <x-lucide-x class="size-5" aria-hidden="true" />
+                    </button>
                 </div>
 
                 <form wire:submit="save" class="p-6">
@@ -265,7 +312,9 @@
                         <h2 class="text-xl font-black text-slate-900">QR tra cứu bảo hành</h2>
                         <p class="mt-1 text-sm text-slate-500">{{ $qrProduct->name }} · {{ $qrProduct->imei }}</p>
                     </div>
-                    <button type="button" wire:click="closeQr" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Đóng">✕</button>
+                    <button type="button" wire:click="closeQr" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Đóng">
+                        <x-lucide-x class="size-5" aria-hidden="true" />
+                    </button>
                 </div>
 
                 <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 text-center">

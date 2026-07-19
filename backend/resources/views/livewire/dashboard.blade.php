@@ -10,13 +10,13 @@
         <div class="flex flex-wrap gap-2">
             @can('products.create')
                 <a href="{{ route('admin.products.index', ['action' => 'create']) }}" class="btn-primary">
-                    <svg viewBox="0 0 20 20" fill="currentColor" class="size-4" aria-hidden="true"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" /></svg>
+                    <x-lucide-plus class="size-4" aria-hidden="true" />
                     Thêm sản phẩm
                 </a>
             @endcan
             <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="btn-secondary">
                 Xem trang tra cứu
-                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4" aria-hidden="true"><path d="M7 13 13 7m-5 0h5v5M13 11v3a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                <x-lucide-external-link class="size-4" aria-hidden="true" />
             </a>
         </div>
     </div>
@@ -77,12 +77,12 @@
                                         <span class="shadcn-badge">{{ number_format($item['count']) }} bản ghi</span>
                                         @if ($item['action_route'] && auth()->user()->can($item['action_permission']))
                                             <a href="{{ $item['action_route'] }}" class="django-row-action django-row-action-add">
-                                                <svg viewBox="0 0 20 20" fill="currentColor" class="size-4" aria-hidden="true"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" /></svg>
+                                                <x-lucide-plus class="size-4" aria-hidden="true" />
                                                 {{ $item['action_label'] }}
                                             </a>
                                         @endif
                                         <a href="{{ $item['route'] }}" class="django-row-action">
-                                            <svg viewBox="0 0 20 20" fill="currentColor" class="size-4" aria-hidden="true"><path d="m13.586 3.586 2.828 2.828-8.5 8.5-3.536.708.708-3.536 8.5-8.5Z" /></svg>
+                                            <x-lucide-pencil class="size-4" aria-hidden="true" />
                                             Xem / sửa
                                         </a>
                                     </div>

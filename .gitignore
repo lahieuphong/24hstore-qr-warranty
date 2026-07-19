@@ -8,6 +8,8 @@ auth.json
 
 # PHP / Composer dependencies and local tools
 vendor/
+!backend/resources/views/vendor/
+!backend/resources/views/vendor/**
 composer.phar
 .phpunit.cache/
 .phpunit.result.cache
