@@ -1,4 +1,4 @@
-# Trang quản trị custom kiểu Django Admin
+# Trang quản trị hệ thống
 
 ## URL
 
@@ -6,15 +6,15 @@
 /admin
 ```
 
-## Thành phần tương đồng Django Admin
+## Chức năng chính
 
-- **Admin site header:** tên hệ thống, liên kết mở site public và thông tin người đăng nhập.
-- **App/module index:** mỗi nhóm nghiệp vụ hiển thị resource, số bản ghi, “Xem / sửa” và hành động thêm mới.
-- **Change list:** danh sách sản phẩm/người dùng có search, filter, sort, pagination và hành động theo dòng.
-- **Add/change form:** form Livewire trong modal, validation phía server.
-- **Recent actions:** dashboard hiển thị thao tác gần đây.
-- **Log entries:** `/admin/activity` cho phép tìm kiếm/lọc nhật ký.
-- **Permissions:** menu và route đều kiểm tra quyền, không chỉ ẩn nút ở giao diện.
+- **Giao diện chung:** hiển thị tên hệ thống, liên kết đến trang công khai và thông tin người đăng nhập.
+- **Dashboard:** nhóm chức năng theo nghiệp vụ, hiển thị số lượng bản ghi và các thao tác nhanh.
+- **Danh sách dữ liệu:** hỗ trợ tìm kiếm, lọc, sắp xếp, phân trang và thao tác theo từng dòng.
+- **Biểu mẫu:** thêm và cập nhật dữ liệu bằng Livewire, có validation phía server.
+- **Hoạt động gần đây:** dashboard hiển thị các thao tác quản trị mới nhất.
+- **Nhật ký hoạt động:** `/admin/activity` hỗ trợ tìm kiếm và lọc nhật ký.
+- **Phân quyền:** menu và route đều kiểm tra quyền truy cập.
 
 ## Nhật ký được ghi
 
