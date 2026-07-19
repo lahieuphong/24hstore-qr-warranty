@@ -5,94 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex,nofollow">
-    <title>{{ $title ?? config('admin.site_name') }}</title>
+    <meta name="theme-color" content="#417690">
+    <title>{{ $title ?? 'Site administration' }} | {{ config('admin.site_name') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('admin-favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="min-h-screen" x-data="{ sidebarOpen: false }">
-    <div class="min-h-screen lg:flex">
-        <div x-cloak x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden" @click="sidebarOpen = false"></div>
+<body class="django-admin-shell min-h-screen" x-data="{ adminMenuOpen: false }">
+    @php
+        $breadcrumbSection = match (true) {
+            request()->routeIs('admin.products.*'), request()->routeIs('admin.labels.*'), request()->routeIs('admin.imports.*') => 'Bảo hành & kho',
+            request()->routeIs('admin.users.*') => 'Xác thực & phân quyền',
+            request()->routeIs('admin.activity.*') => 'Vận hành hệ thống',
+            request()->routeIs('admin.profile') => 'Tài khoản',
+            default => null,
+        };
+    @endphp
+    <header class="django-masthead">
+        <div class="mx-auto flex min-h-16 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            <a href="{{ url('/admin').'/' }}" class="group flex min-w-0 items-center gap-3" aria-label="Về trang quản trị">
+                <span class="grid size-10 shrink-0 place-items-center rounded-md border border-white/20 bg-white/10 text-sm font-black tracking-wide text-white shadow-sm">QR</span>
+                <span class="min-w-0">
+                    <span class="block truncate text-lg font-medium tracking-tight text-[#f5dd5d] sm:text-xl">{{ config('admin.site_name') }}</span>
+                    <span class="block truncate text-[11px] font-medium uppercase tracking-[0.14em] text-sky-100/80">{{ config('admin.site_tagline') }}</span>
+                </span>
+            </a>
 
-        <aside
-            class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col border-r border-slate-800 bg-slate-950 text-slate-100 transition-transform duration-200 lg:static lg:translate-x-0"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-        >
-            <div class="flex h-16 items-center justify-between border-b border-slate-800 px-5">
-                <a href="{{ route('admin.dashboard') }}" class="flex min-w-0 items-center gap-3">
-                    <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-indigo-500 font-black text-white">QR</span>
-                    <span class="min-w-0">
-                        <span class="block truncate text-sm font-bold">{{ config('admin.site_name') }}</span>
-                        <span class="block truncate text-xs text-slate-400">{{ config('admin.site_tagline') }}</span>
-                    </span>
-                </a>
-                <button class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 lg:hidden" @click="sidebarOpen = false" aria-label="Đóng menu">✕</button>
-            </div>
+            <button
+                type="button"
+                class="inline-flex size-10 items-center justify-center rounded-md border border-white/25 text-white transition hover:bg-white/10 lg:hidden"
+                @click="adminMenuOpen = ! adminMenuOpen"
+                :aria-expanded="adminMenuOpen"
+                aria-controls="admin-mobile-menu"
+                aria-label="Mở menu quản trị"
+            >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5" aria-hidden="true">
+                    <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+                </svg>
+            </button>
 
-            <nav class="flex-1 overflow-y-auto p-4 text-sm">
-                <p class="mb-2 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Trang quản trị</p>
-                <div class="space-y-1">
-                    @can('dashboard.view')
-                        <a href="{{ route('admin.dashboard') }}" class="admin-nav-link {{ request()->routeIs('admin.dashboard') ? 'admin-nav-link-active' : '' }}"><span class="w-5 text-center">⌂</span> Tổng quan</a>
-                    @endcan
-                </div>
-
-                <p class="mb-2 mt-6 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Bảo hành & kho</p>
-                <div class="space-y-1">
-                    @can('products.view')
-                        <a href="{{ route('admin.products.index') }}" class="admin-nav-link {{ request()->routeIs('admin.products.*') || request()->routeIs('admin.labels.*') ? 'admin-nav-link-active' : '' }}"><span class="w-5 text-center">▣</span> Sản phẩm & QR</a>
-                    @endcan
-                    @can('products.import')
-                        <a href="{{ route('admin.imports.index') }}" class="admin-nav-link {{ request()->routeIs('admin.imports.*') ? 'admin-nav-link-active' : '' }}"><span class="w-5 text-center">⇧</span> Import Excel</a>
-                    @endcan
-                </div>
-
-                <p class="mb-2 mt-6 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Tài khoản & hệ thống</p>
-                <div class="space-y-1">
-                    @can('users.manage')
-                        <a href="{{ route('admin.users.index') }}" class="admin-nav-link {{ request()->routeIs('admin.users.*') ? 'admin-nav-link-active' : '' }}"><span class="w-5 text-center">♙</span> Người dùng</a>
-                    @endcan
-                    @can('activity.view')
-                        <a href="{{ route('admin.activity.index') }}" class="admin-nav-link {{ request()->routeIs('admin.activity.*') ? 'admin-nav-link-active' : '' }}"><span class="w-5 text-center">◴</span> Hoạt động</a>
-                    @endcan
-                </div>
-            </nav>
-
-            <div class="border-t border-slate-800 p-4">
-                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="mb-3 flex items-center justify-between rounded-xl border border-slate-800 px-3 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-900 hover:text-white">
-                    <span>Mở trang tra cứu</span><span>↗</span>
-                </a>
-                <a href="{{ route('admin.profile') }}" class="mb-3 flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-900">
-                    <span class="grid size-9 place-items-center rounded-full bg-slate-800 text-sm font-bold">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span>
-                    <span class="min-w-0">
-                        <span class="block truncate text-sm font-semibold">{{ auth()->user()->name }}</span>
-                        <span class="block truncate text-xs text-slate-400">{{ auth()->user()->roles->first()?->name ?? 'user' }}</span>
-                    </span>
-                </a>
+            <div class="hidden items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/90 lg:flex">
+                <span class="mr-1">Xin chào, <strong class="text-white">{{ auth()->user()->name }}</strong></span>
+                <span class="text-white/40">/</span>
+                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-utility-link">Xem trang tra cứu</a>
+                <span class="text-white/40">/</span>
+                <a href="{{ route('admin.profile') }}" class="django-utility-link">Đổi mật khẩu</a>
+                <span class="text-white/40">/</span>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-slate-900 hover:text-white">Đăng xuất</button>
+                    <button type="submit" class="django-utility-link uppercase tracking-wide">Đăng xuất</button>
                 </form>
             </div>
-        </aside>
-
-        <div class="min-w-0 flex-1">
-            <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3">
-                    <button class="rounded-xl border border-slate-200 p-2.5 text-slate-700 lg:hidden" @click="sidebarOpen = true" aria-label="Mở menu">☰</button>
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Backend Administration</p>
-                        <p class="text-sm font-bold text-slate-800">Dữ liệu tập trung · Livewire UI</p>
-                    </div>
-                </div>
-                <div class="hidden text-right sm:block">
-                    <p class="text-sm font-semibold text-slate-800">{{ now()->format('d/m/Y') }}</p>
-                    <p class="text-xs text-slate-500">{{ app()->environment() }} · {{ config('database.default') }}</p>
-                </div>
-            </header>
-
-            <main class="p-4 sm:p-6 lg:p-8">{{ $slot }}</main>
         </div>
+
+        <div
+            id="admin-mobile-menu"
+            x-cloak
+            x-show="adminMenuOpen"
+            x-transition.origin.top
+            class="border-t border-white/15 bg-[#264b5d] px-4 py-3 lg:hidden"
+        >
+            <nav class="mx-auto grid max-w-[1600px] gap-1 text-sm text-white">
+                @can('dashboard.view')
+                    <a href="{{ url('/admin').'/' }}" class="django-mobile-nav-link {{ request()->routeIs('admin.dashboard') ? 'bg-white/15' : '' }}">Trang quản trị</a>
+                @endcan
+                @can('products.view')
+                    <a href="{{ route('admin.products.index') }}" class="django-mobile-nav-link">Sản phẩm & QR</a>
+                @endcan
+                @can('products.import')
+                    <a href="{{ route('admin.imports.index') }}" class="django-mobile-nav-link">Import Excel</a>
+                @endcan
+                @can('users.manage')
+                    <a href="{{ route('admin.users.index') }}" class="django-mobile-nav-link">Người dùng</a>
+                @endcan
+                @can('activity.view')
+                    <a href="{{ route('admin.activity.index') }}" class="django-mobile-nav-link">Hoạt động quản trị</a>
+                @endcan
+                <a href="{{ route('admin.profile') }}" class="django-mobile-nav-link">Hồ sơ / Đổi mật khẩu</a>
+                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-mobile-nav-link">Mở trang tra cứu ↗</a>
+                <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-white/15 pt-2">
+                    @csrf
+                    <button type="submit" class="django-mobile-nav-link w-full text-left">Đăng xuất</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <div class="django-breadcrumb-bar">
+        <nav class="mx-auto flex min-h-10 max-w-[1600px] items-center gap-2 px-4 text-xs sm:px-6 lg:px-8" aria-label="Breadcrumb">
+            <a href="{{ url('/admin').'/' }}" class="font-semibold text-white hover:underline">Trang chủ</a>
+            @unless (request()->routeIs('admin.dashboard'))
+                <svg viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-white/60" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.22 14.78a.75.75 0 0 1 0-1.06L10.94 10 7.22 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd" />
+                </svg>
+                @if ($breadcrumbSection)
+                    <span class="font-medium text-white/75">{{ $breadcrumbSection }}</span>
+                    <svg viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-white/60" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.22 14.78a.75.75 0 0 1 0-1.06L10.94 10 7.22 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd" />
+                    </svg>
+                @endif
+                <span class="font-medium text-white/90">{{ $title ?? 'Administration' }}</span>
+            @endunless
+        </nav>
     </div>
+
+    <main class="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        {{ $slot }}
+    </main>
+
+    <footer class="mx-auto max-w-[1600px] px-4 pb-8 pt-2 text-center text-xs text-slate-400 sm:px-6 lg:px-8">
+        {{ config('admin.site_name') }} · Laravel & Livewire administration
+    </footer>
 
     @livewireScripts
     @stack('scripts')

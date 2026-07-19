@@ -21,6 +21,8 @@ class AdminAuthenticationTest extends TestCase
     {
         $this->get('/admin/login/?next=/admin/products')
             ->assertOk()
+            ->assertSee('<title>Đăng nhập | 24hStore Administration</title>', false)
+            ->assertSee('admin-favicon.svg')
             ->assertSee('Đăng nhập khu vực quản trị nội bộ')
             ->assertSee('name="next" value="/admin/products"', false);
     }

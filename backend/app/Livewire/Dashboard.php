@@ -16,7 +16,7 @@ use Livewire\Component;
 use Throwable;
 
 #[Layout('layouts.admin')]
-#[Title('Quản trị hệ thống')]
+#[Title('Site administration')]
 class Dashboard extends Component
 {
     use AuthorizesRequests;

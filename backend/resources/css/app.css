@@ -7,7 +7,24 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-sans: Inter, Roboto, "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+    --color-django-header: #417690;
+    --color-django-dark: #264b5d;
+    --color-django-module: #79aec8;
+    --color-django-accent: #f5dd5d;
+    --color-django-link: #447e9b;
+}
+
+:root {
+    --admin-header: #417690;
+    --admin-header-dark: #264b5d;
+    --admin-module: #79aec8;
+    --admin-accent: #f5dd5d;
+    --admin-link: #447e9b;
+    --admin-link-hover: #205067;
+    --admin-border: #d8e0e5;
+    --admin-muted: #f3f6f8;
+    --admin-radius: 0.5rem;
 }
 
 [x-cloak] {
@@ -18,8 +35,31 @@ body {
     @apply bg-slate-50 text-slate-900 antialiased;
 }
 
+.django-admin-shell {
+    background: #f7f9fa;
+    color: #334155;
+}
+
+.django-masthead {
+    background: var(--admin-header);
+    box-shadow: inset 0 -1px 0 rgb(255 255 255 / 12%);
+}
+
+.django-utility-link {
+    @apply inline-flex items-center border-0 bg-transparent p-0 text-xs font-semibold text-white/90 underline-offset-4 transition hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70;
+}
+
+.django-mobile-nav-link {
+    @apply rounded-md px-3 py-2.5 font-medium text-white/90 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70;
+}
+
+.django-breadcrumb-bar {
+    background: var(--admin-header-dark);
+    border-bottom: 1px solid rgb(15 23 42 / 12%);
+}
+
 .form-input {
-    @apply block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-100;
+    @apply block min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:border-sky-600 focus:ring-2 focus:ring-sky-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500;
 }
 
 .form-label {
@@ -27,41 +67,163 @@ body {
 }
 
 .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    background: var(--admin-header);
+}
+
+.btn-primary:hover {
+    background: var(--admin-link-hover);
 }
 
 .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
 .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus:ring-4 focus:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
 .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
-}
-
-.admin-nav-link {
-    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 font-semibold text-slate-300 transition hover:bg-slate-900 hover:text-white;
-}
-
-.admin-nav-link-active {
-    @apply bg-indigo-500 text-white hover:bg-indigo-500;
+    @apply rounded-lg border bg-white shadow-sm;
+    border-color: var(--admin-border);
 }
 
 .admin-stat-card {
-    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm;
+    @apply rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm;
 }
 
 .admin-stat-label {
-    @apply text-sm font-semibold text-slate-500;
+    @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
 }
 
 .admin-stat-value {
-    @apply mt-3 text-3xl font-black text-slate-900;
+    @apply mt-2 text-2xl font-semibold tabular-nums text-slate-800;
 }
 
 .admin-link-action {
-    @apply whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700;
+    @apply whitespace-nowrap rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50;
+}
+
+.django-module {
+    @apply overflow-hidden rounded-md border bg-white shadow-sm;
+    border-color: var(--admin-border);
+}
+
+.django-module-header {
+    @apply px-4 py-3 sm:px-5;
+    background: var(--admin-module);
+}
+
+.django-model-row {
+    @apply grid gap-3 px-4 py-3.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5;
+}
+
+.django-model-row:hover {
+    background: #fffdf3;
+}
+
+.django-model-link {
+    @apply text-sm font-semibold hover:underline;
+    color: var(--admin-link);
+}
+
+.django-model-link:hover {
+    color: var(--admin-link-hover);
+}
+
+.django-row-action {
+    @apply inline-flex items-center gap-1 text-xs font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
+    color: var(--admin-link);
+}
+
+.django-row-action:hover {
+    color: var(--admin-link-hover);
+}
+
+.django-row-action-add {
+    color: #2f7d32;
+}
+
+.shadcn-badge {
+    @apply inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600;
+}
+
+.django-recent-actions {
+    @apply rounded-md border bg-white shadow-sm;
+    border-color: var(--admin-border);
+}
+
+.django-detail-label {
+    @apply text-[11px] font-bold uppercase tracking-wider text-slate-400;
+}
+
+.django-admin-shell main h1 {
+    font-weight: 600;
+}
+
+.django-admin-shell table thead {
+    background: var(--admin-muted);
+}
+
+.django-admin-shell table tbody tr {
+    transition: background-color 120ms ease;
+}
+
+.django-admin-shell table tbody tr:hover {
+    background: #fffdf3;
+}
+
+.django-admin-shell [role='dialog'] > div {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    border: 1px solid var(--admin-border);
+    border-radius: 0.75rem;
+}
+
+.django-admin-shell input[type='checkbox'] {
+    accent-color: var(--admin-header);
+}
+
+.django-admin-shell .text-indigo-600,
+.django-admin-shell .text-indigo-700 {
+    color: var(--admin-link);
+}
+
+.django-admin-shell .text-indigo-800,
+.django-admin-shell .text-indigo-900 {
+    color: var(--admin-link-hover);
+}
+
+.django-admin-shell .bg-indigo-50 {
+    background-color: #e8f1f5;
+}
+
+.django-admin-shell .bg-indigo-600 {
+    background-color: var(--admin-header);
+}
+
+.django-admin-shell .bg-indigo-700 {
+    background-color: var(--admin-link-hover);
+}
+
+.django-admin-shell .border-indigo-200 {
+    border-color: #b8d1dc;
+}
+
+.django-admin-shell .border-indigo-700 {
+    border-color: var(--admin-header-dark);
+}
+
+.django-admin-shell a,
+.django-admin-shell button,
+.django-admin-shell input,
+.django-admin-shell select,
+.django-admin-shell textarea {
+    scroll-margin-top: 5rem;
+}
+
+@media (max-width: 640px) {
+    .django-model-row > :last-child {
+        justify-content: flex-start;
+    }
 }

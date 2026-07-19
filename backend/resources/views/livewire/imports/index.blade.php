@@ -22,7 +22,7 @@
                         type="file"
                         wire:model="file"
                         accept=".xlsx,.xls,.csv"
-                        class="block w-full rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-indigo-700"
+                        class="block w-full rounded-md border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-[#417690] file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-[#205067]"
                     >
                     @error('file') <p class="mt-2 text-xs text-rose-600">{{ $message }}</p> @enderror
                     <p wire:loading wire:target="file" class="mt-2 text-xs font-semibold text-indigo-600">Đang tải file lên...</p>
