@@ -2,7 +2,7 @@
     <x-flash />
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <p class="text-sm font-semibold text-indigo-600">Nạp dữ liệu hàng loạt</p>
+            <p class="text-sm font-semibold text-rose-700">Nạp dữ liệu hàng loạt</p>
             <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Import sản phẩm từ Excel</h1>
             <p class="mt-2 text-sm text-slate-500">Hỗ trợ XLSX, XLS và CSV; các dòng hợp lệ vẫn được nhập khi một số dòng khác có lỗi.</p>
         </div>
@@ -22,10 +22,10 @@
                         type="file"
                         wire:model="file"
                         accept=".xlsx,.xls,.csv"
-                        class="block w-full rounded-md border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-[#417690] file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-[#205067]"
+                        class="block w-full rounded-md border border-dashed border-slate-300 bg-rose-50/50 px-4 py-6 text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-rose-700 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-rose-800"
                     >
                     @error('file') <p class="mt-2 text-xs text-rose-600">{{ $message }}</p> @enderror
-                    <p wire:loading wire:target="file" class="mt-2 text-xs font-semibold text-indigo-600">Đang tải file lên...</p>
+                    <p wire:loading wire:target="file" class="mt-2 text-xs font-semibold text-rose-700">Đang tải file lên...</p>
                 </div>
 
                 <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="import,file">

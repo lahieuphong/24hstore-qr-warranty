@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-4xl space-y-6">
     <x-flash />
     <div>
-        <p class="text-sm font-semibold text-indigo-600">Tài khoản</p>
+        <p class="text-sm font-semibold text-rose-700">Tài khoản</p>
         <h1 class="mt-1 text-2xl font-black text-slate-900">Hồ sơ cá nhân</h1>
         <p class="mt-2 text-sm text-slate-500">Cập nhật thông tin hiển thị và mật khẩu đăng nhập.</p>
     </div>

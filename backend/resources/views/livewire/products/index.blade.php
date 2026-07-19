@@ -2,7 +2,7 @@
     <x-flash />
     <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-            <p class="text-sm font-semibold text-indigo-600">Kho & bảo hành</p>
+            <p class="text-sm font-semibold text-rose-700">Kho & bảo hành</p>
             <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Sản phẩm và mã QR</h1>
             <p class="mt-2 text-sm text-slate-500">Mỗi IMEI có một QR riêng, dẫn đến trang tra cứu công khai bằng mã token ngẫu nhiên.</p>
         </div>
@@ -50,8 +50,8 @@
     </section>
 
     @if (count($selected) > 0)
-        <div class="flex flex-col gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-sm font-semibold text-indigo-900">Đã chọn {{ count($selected) }} sản phẩm.</p>
+        <div class="flex flex-col gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm font-semibold text-rose-900">Đã chọn {{ count($selected) }} sản phẩm.</p>
             <div class="flex flex-wrap gap-2">
                 <button type="button" wire:click="clearSelection" class="btn-secondary">Bỏ chọn</button>
                 @can('products.print')
@@ -73,7 +73,7 @@
             <p class="text-sm text-slate-500">
                 Kết quả: <span class="font-bold text-slate-800">{{ number_format($products->total()) }}</span> sản phẩm
             </p>
-            <button type="button" wire:click="selectCurrentPage" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800">
+            <button type="button" wire:click="selectCurrentPage" class="text-sm font-semibold text-rose-700 hover:text-rose-900">
                 Chọn các dòng trang này
             </button>
         </div>
@@ -105,13 +105,13 @@
                                     type="checkbox"
                                     wire:model.live="selected"
                                     value="{{ $product->id }}"
-                                    class="size-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                    class="size-4 rounded border-slate-300 text-rose-700 focus:ring-rose-500"
                                     aria-label="Chọn {{ $product->imei }}"
                                 >
                             </td>
                             <td class="px-4 py-4">
                                 <p class="font-bold text-slate-900">{{ $product->name }}</p>
-                                <p class="mt-1 text-xs font-semibold text-indigo-600">{{ $product->product_code }}</p>
+                                <p class="mt-1 text-xs font-semibold text-rose-700">{{ $product->product_code }}</p>
                                 @if ($product->creator)
                                     <p class="mt-2 text-xs text-slate-400">Tạo bởi {{ $product->creator->name }}</p>
                                 @endif
@@ -138,7 +138,7 @@
                                         Xem QR
                                     </button>
                                     @can('products.print')
-                                        <a href="{{ route('admin.products.label', $product) }}" target="_blank" rel="noopener" class="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-100">
+                                        <a href="{{ route('admin.products.label', $product) }}" target="_blank" rel="noopener" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100">
                                             Tem PDF
                                         </a>
                                     @endcan

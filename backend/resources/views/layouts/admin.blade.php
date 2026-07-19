@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex,nofollow">
-    <meta name="theme-color" content="#417690">
+    <meta name="theme-color" content="#9f1239">
     <title>{{ $title ?? 'Site administration' }} | {{ config('admin.site_name') }}</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('admin-favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('admin-favicon.svg') }}?v=2">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
@@ -24,10 +24,12 @@
     <header class="django-masthead">
         <div class="mx-auto flex min-h-16 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <a href="{{ url('/admin').'/' }}" class="group flex min-w-0 items-center gap-3" aria-label="Về trang quản trị">
-                <span class="grid size-10 shrink-0 place-items-center rounded-md border border-white/20 bg-white/10 text-sm font-black tracking-wide text-white shadow-sm">QR</span>
+                <span class="grid size-10 shrink-0 place-items-center rounded-md border border-white/20 bg-white/10 shadow-sm">
+                    <img src="{{ asset('laravel-logo.svg') }}" alt="" class="h-6 w-auto" aria-hidden="true">
+                </span>
                 <span class="min-w-0">
-                    <span class="block truncate text-lg font-medium tracking-tight text-[#f5dd5d] sm:text-xl">{{ config('admin.site_name') }}</span>
-                    <span class="block truncate text-[11px] font-medium uppercase tracking-[0.14em] text-sky-100/80">{{ config('admin.site_tagline') }}</span>
+                    <span class="block truncate text-lg font-medium tracking-tight text-rose-100 sm:text-xl">{{ config('admin.site_name') }}</span>
+                    <span class="block truncate text-[11px] font-medium uppercase tracking-[0.14em] text-rose-100/75">{{ config('admin.site_tagline') }}</span>
                 </span>
             </a>
 
@@ -63,7 +65,7 @@
             x-cloak
             x-show="adminMenuOpen"
             x-transition.origin.top
-            class="border-t border-white/15 bg-[#264b5d] px-4 py-3 lg:hidden"
+            class="border-t border-white/15 bg-[#881337] px-4 py-3 lg:hidden"
         >
             <nav class="mx-auto grid max-w-[1600px] gap-1 text-sm text-white">
                 @can('dashboard.view')

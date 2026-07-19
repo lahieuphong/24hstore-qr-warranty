@@ -2,7 +2,7 @@
     <x-flash />
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <p class="text-sm font-semibold text-indigo-600">Bảo mật nội bộ</p>
+            <p class="text-sm font-semibold text-rose-700">Bảo mật nội bộ</p>
             <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Người dùng và phân quyền</h1>
             <p class="mt-2 text-sm text-slate-500">Tạo tài khoản nhân viên, gán vai trò và khóa quyền truy cập khi cần.</p>
         </div>
@@ -38,7 +38,7 @@
                                 </div>
                             </td>
                             <td class="px-5 py-4">
-                                <span class="inline-flex rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
+                                <span class="inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 ring-1 ring-inset ring-rose-600/20">
                                     {{ $user->roles->first()?->name ?? 'Chưa gán' }}
                                 </span>
                             </td>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="flex items-end pb-2">
                             <label class="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                                <input type="checkbox" wire:model="is_active" class="size-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                                <input type="checkbox" wire:model="is_active" class="size-4 rounded border-slate-300 text-rose-700 focus:ring-rose-500">
                                 Tài khoản đang hoạt động
                             </label>
                             @error('is_active') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror

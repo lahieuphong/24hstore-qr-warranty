@@ -30,6 +30,7 @@ class AdminDashboardTest extends TestCase
             ->assertOk()
             ->assertSee('<title>Site administration | 24hStore Administration</title>', false)
             ->assertSee('admin-favicon.svg')
+            ->assertSee('laravel-logo.svg')
             ->assertSee('Xin chào,')
             ->assertDontSee('Backend Administration')
             ->assertSee('Administration')

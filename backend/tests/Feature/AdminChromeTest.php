@@ -24,6 +24,7 @@ class AdminChromeTest extends TestCase
             ->assertSee('24hStore Administration')
             ->assertSee('Bảo hành &amp; kho', false)
             ->assertSee('Sản phẩm &amp; QR', false)
+            ->assertSee('laravel-logo.svg')
             ->assertSee('Xem trang tra cứu')
             ->assertSee('Đổi mật khẩu')
             ->assertSee('Đăng xuất');
@@ -32,5 +33,6 @@ class AdminChromeTest extends TestCase
     public function test_admin_favicon_asset_exists(): void
     {
         $this->assertFileExists(public_path('admin-favicon.svg'));
+        $this->assertFileExists(public_path('laravel-logo.svg'));
     }
 }

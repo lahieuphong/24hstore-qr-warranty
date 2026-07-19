@@ -3,7 +3,7 @@
 
     <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-            <p class="text-xs font-bold uppercase tracking-[0.14em] text-[#417690]">Administration</p>
+            <p class="text-xs font-bold uppercase tracking-[0.14em] text-rose-700">Administration</p>
             <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-800 sm:text-3xl">Quản trị hệ thống</h1>
             <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">Chọn một chức năng bên dưới để xem, thêm hoặc thay đổi dữ liệu bảo hành.</p>
         </div>
@@ -134,7 +134,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <h2 id="recent-actions-heading" class="text-lg font-medium text-slate-800">Hoạt động gần đây</h2>
                     @can('activity.view')
-                        <a href="{{ route('admin.activity.index') }}" class="text-xs font-semibold text-[#417690] hover:underline">Xem tất cả</a>
+                        <a href="{{ route('admin.activity.index') }}" class="text-xs font-semibold text-rose-700 hover:text-rose-900 hover:underline">Xem tất cả</a>
                     @endcan
                 </div>
                 <p class="mt-2 text-xs font-bold uppercase tracking-wide text-slate-500">Hoạt động quản trị</p>
@@ -143,7 +143,7 @@
                 @forelse ($recentActivities as $activity)
                     <div class="px-5 py-4">
                         <div class="flex items-start gap-3">
-                            <span class="mt-0.5 grid size-7 shrink-0 place-items-center rounded-md bg-[#e8f1f5] text-[11px] font-bold text-[#417690]">{{ mb_strtoupper(mb_substr($activity->user?->name ?? 'H', 0, 1)) }}</span>
+                            <span class="mt-0.5 grid size-7 shrink-0 place-items-center rounded-md bg-rose-100 text-[11px] font-bold text-rose-700">{{ mb_strtoupper(mb_substr($activity->user?->name ?? 'H', 0, 1)) }}</span>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm leading-5 text-slate-700">{{ $activity->description }}</p>
                                 <p class="mt-1 text-xs text-slate-400">{{ $activity->user?->name ?? 'Hệ thống' }} · {{ $activity->created_at->diffForHumans() }}</p>

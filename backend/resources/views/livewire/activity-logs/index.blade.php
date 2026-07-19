@@ -2,7 +2,7 @@
     <x-flash />
 
     <div>
-        <p class="text-sm font-semibold text-indigo-600">Nhật ký hệ thống</p>
+        <p class="text-sm font-semibold text-rose-700">Nhật ký hệ thống</p>
         <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Hoạt động quản trị</h1>
         <p class="mt-2 text-sm text-slate-500">Theo dõi đăng nhập và các thao tác thay đổi dữ liệu quan trọng.</p>
     </div>
@@ -50,7 +50,7 @@
                                 <p class="mt-1 text-xs text-slate-500">{{ $log->user?->email ?? 'Tác vụ tự động' }}</p>
                             </td>
                             <td class="px-5 py-4">
-                                <span class="inline-flex rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700">{{ $log->actionLabel() }}</span>
+                                <span class="inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700">{{ $log->actionLabel() }}</span>
                                 <p class="mt-1 font-mono text-[11px] text-slate-400">{{ $log->action }}</p>
                             </td>
                             <td class="max-w-xl px-5 py-4 leading-6 text-slate-700">{{ $log->description }}</td>

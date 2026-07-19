@@ -23,7 +23,11 @@ class AdminAuthenticationTest extends TestCase
             ->assertOk()
             ->assertSee('<title>Đăng nhập | 24hStore Administration</title>', false)
             ->assertSee('admin-favicon.svg')
+            ->assertSee('laravel-logo.svg')
             ->assertSee('Đăng nhập khu vực quản trị nội bộ')
+            ->assertSee('data-password-toggle', false)
+            ->assertSee('aria-controls="password"', false)
+            ->assertSee('aria-label="Hiện mật khẩu"', false)
             ->assertSee('name="next" value="/admin/products"', false);
     }
 
