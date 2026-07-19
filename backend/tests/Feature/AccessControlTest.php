@@ -40,7 +40,7 @@ class AccessControlTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin')
-            ->assertRedirect(route('login'));
+            ->assertHeader('Location', url('/admin/login').'/?next=/admin/');
 
         $this->assertGuest();
     }

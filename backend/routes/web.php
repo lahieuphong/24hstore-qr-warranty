@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
+Route::get('/login', [AuthenticatedSessionController::class, 'legacy'])->name('login.legacy');
+
 Route::middleware('guest')->group(function (): void {
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    Route::get('/admin/login/', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/admin/login/', [AuthenticatedSessionController::class, 'store'])
         ->middleware('throttle:10,1')
         ->name('login.store');
 });

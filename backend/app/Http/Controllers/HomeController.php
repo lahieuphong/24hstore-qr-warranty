@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function __invoke(Request $request): RedirectResponse
     {
         return $request->user()
-            ? to_route('admin.dashboard')
-            : to_route('login');
+            ? redirect()->to(url('/admin').'/')
+            : redirect()->to(url('/admin/login').'/?next=/admin/');
     }
 }

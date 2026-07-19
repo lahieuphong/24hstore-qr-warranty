@@ -4,6 +4,7 @@ use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -19,8 +20,20 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Console/Commands',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn () => route('login'));
-        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+        $middleware->redirectGuestsTo(function (Request $request): string {
+            $next = $request->is('admin') || $request->is('admin/*')
+                ? $request->getRequestUri()
+                : '/admin/';
+
+            if ($next === '/admin') {
+                $next = '/admin/';
+            }
+
+            $encodedNext = str_replace('%2F', '/', rawurlencode($next));
+
+            return url('/admin/login').'/?next='.$encodedNext;
+        });
+        $middleware->redirectUsersTo(fn () => url('/admin').'/');
 
         $middleware->alias([
             'active' => EnsureUserIsActive::class,

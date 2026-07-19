@@ -14,9 +14,16 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function create(): View
+    public function legacy(): RedirectResponse
     {
-        return view('auth.login');
+        return redirect()->to(url('/admin/login').'/?next=/admin/');
+    }
+
+    public function create(Request $request): View
+    {
+        return view('auth.login', [
+            'next' => $this->safeNext($request->query('next')),
+        ]);
     }
 
     public function store(Request $request, AdminActivityLogger $activityLogger): RedirectResponse
@@ -59,7 +66,11 @@ class AuthenticatedSessionController extends Controller
             userId: $request->user()?->id,
         );
 
-        return redirect()->intended(route('admin.dashboard'));
+        $request->session()->forget('url.intended');
+
+        return redirect()->away(
+            rtrim(url('/'), '/').$this->safeNext($request->input('next')),
+        );
     }
 
     public function destroy(Request $request, AdminActivityLogger $activityLogger): RedirectResponse
@@ -75,6 +86,60 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->to(url('/admin/login').'/?next=/admin/');
+    }
+
+    private function safeNext(mixed $value): string
+    {
+        if (! is_string($value)) {
+            return '/admin/';
+        }
+
+        $next = trim($value);
+
+        if (mb_strlen($next) > 2048) {
+            return '/admin/';
+        }
+
+        if ($next === '/admin') {
+            return '/admin/';
+        }
+
+        $parts = parse_url($next);
+        $path = is_array($parts) ? ($parts['path'] ?? '') : '';
+
+        if (is_string($path)) {
+            for ($attempt = 0; $attempt < 3; $attempt++) {
+                $decodedPath = rawurldecode($path);
+
+                if ($decodedPath === $path) {
+                    break;
+                }
+
+                $path = $decodedPath;
+            }
+        }
+
+        if (
+            $next === ''
+            || ! is_array($parts)
+            || isset($parts['scheme'])
+            || isset($parts['host'])
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['port'])
+            || ! is_string($path)
+            || ! str_starts_with($path, '/')
+            || str_starts_with($path, '//')
+            || str_contains($path, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/', $path) === 1
+            || in_array('..', explode('/', $path), true)
+            || in_array('.', explode('/', $path), true)
+            || preg_match('#^/admin(?:/|$)#', $path) !== 1
+        ) {
+            return '/admin/';
+        }
+
+        return $next;
     }
 }

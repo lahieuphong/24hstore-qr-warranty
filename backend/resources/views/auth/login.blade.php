@@ -24,8 +24,9 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
+                <form method="POST" class="space-y-5">
                     @csrf
+                    <input type="hidden" name="next" value="{{ $next }}">
                     <div>
                         <label for="email" class="form-label">Email</label>
                         <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-input" placeholder="admin@gmail.com">

@@ -16,7 +16,7 @@ class EnsureUserIsActive
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->withErrors([
+            return redirect()->to(url('/admin/login').'/?next=/admin/')->withErrors([
                 'email' => 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.',
             ]);
         }
