@@ -139,6 +139,23 @@
                         </th>
                         <th class="min-w-40 px-4 py-3">Bảo hành</th>
                         <th class="min-w-36 px-4 py-3">Trạng thái</th>
+                        <th
+                            class="min-w-40 px-4 py-3"
+                            aria-sort="{{ $sortField === 'created_at' ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none' }}"
+                        >
+                            <button type="button" wire:click="sortBy('created_at')" class="inline-flex items-center gap-1 hover:text-slate-900">
+                                Thời gian
+                                @if ($sortField === 'created_at')
+                                    @if ($sortDirection === 'asc')
+                                        <x-lucide-arrow-up class="size-4" aria-hidden="true" />
+                                    @else
+                                        <x-lucide-arrow-down class="size-4" aria-hidden="true" />
+                                    @endif
+                                @else
+                                    <x-lucide-arrow-up-down class="size-4" aria-hidden="true" />
+                                @endif
+                            </button>
+                        </th>
                         <th class="min-w-56 px-4 py-3 text-right">Thao tác</th>
                     </tr>
                 </thead>
@@ -177,6 +194,9 @@
                             <td class="px-4 py-4">
                                 <x-status-badge :status="$product->effectiveWarrantyStatus()" />
                             </td>
+                            <td class="whitespace-nowrap px-4 py-4 text-slate-500">
+                                {{ $product->created_at?->format('d/m/Y H:i') ?? 'Không có' }}
+                            </td>
                             <td class="px-4 py-4">
                                 <div class="flex flex-wrap justify-end gap-2">
                                     <button type="button" wire:click="showQr({{ $product->id }})" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">
@@ -202,7 +222,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-16 text-center">
+                            <td colspan="8" class="px-6 py-16 text-center">
                                 <p class="font-bold text-slate-700">Không tìm thấy sản phẩm.</p>
                                 <p class="mt-1 text-sm text-slate-500">Thử đổi từ khóa hoặc bộ lọc trạng thái.</p>
                             </td>

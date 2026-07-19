@@ -24,7 +24,7 @@
                         <th class="px-5 py-3">Người dùng</th>
                         <th class="px-5 py-3">Vai trò</th>
                         <th class="px-5 py-3">Trạng thái</th>
-                        <th class="px-5 py-3">Ngày tạo</th>
+                        <th class="min-w-40 px-5 py-3">Thời gian</th>
                         <th class="px-5 py-3 text-right">Thao tác</th>
                     </tr>
                 </thead>
@@ -50,7 +50,9 @@
                                     {{ $user->is_active ? 'Đang hoạt động' : 'Đã khóa' }}
                                 </span>
                             </td>
-                            <td class="px-5 py-4 text-slate-500">{{ $user->created_at->format('d/m/Y') }}</td>
+                            <td class="whitespace-nowrap px-5 py-4 text-slate-500">
+                                {{ $user->created_at?->format('d/m/Y H:i') ?? 'Không có' }}
+                            </td>
                             <td class="px-5 py-4">
                                 <div class="flex justify-end gap-2">
                                     <button type="button" wire:click="edit({{ $user->id }})" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">Sửa</button>

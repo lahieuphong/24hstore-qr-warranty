@@ -31,7 +31,7 @@
             <table class="min-w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
                     <tr>
-                        <th class="px-5 py-3">Thời gian</th>
+                        <th class="min-w-40 px-5 py-3">Thời gian</th>
                         <th class="px-5 py-3">Người thao tác</th>
                         <th class="px-5 py-3">Hành động</th>
                         <th class="px-5 py-3">Chi tiết</th>
@@ -41,9 +41,8 @@
                 <tbody class="divide-y divide-slate-100 bg-white">
                     @forelse ($logs as $log)
                         <tr class="align-top hover:bg-slate-50/70">
-                            <td class="whitespace-nowrap px-5 py-4 text-slate-600">
-                                <p class="font-semibold text-slate-800">{{ $log->created_at->format('d/m/Y') }}</p>
-                                <p class="mt-1 text-xs">{{ $log->created_at->format('H:i:s') }}</p>
+                            <td class="whitespace-nowrap px-5 py-4 text-slate-500">
+                                {{ $log->created_at?->format('d/m/Y H:i') ?? 'Không có' }}
                             </td>
                             <td class="px-5 py-4">
                                 <p class="font-bold text-slate-900">{{ $log->user?->name ?? 'Hệ thống' }}</p>
