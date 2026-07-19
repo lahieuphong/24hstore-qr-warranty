@@ -12,11 +12,11 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         $name = (string) config('admin.name', 'Quản trị hệ thống');
-        $email = Str::lower(trim((string) config('admin.email', 'admin@24hstore.local')));
-        $password = (string) config('admin.password', 'ChangeMeNow!2026');
+        $email = Str::lower(trim((string) config('admin.email', 'admin@gmail.com')));
+        $password = (string) config('admin.password', 'Aa123456');
 
         if (app()->isProduction() && (
-            $password === 'ChangeMeNow!2026'
+            $password === 'Aa123456'
             || Str::contains($password, ['replace_with', 'changeme'])
             || mb_strlen($password) < 12
         )) {

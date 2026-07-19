@@ -28,7 +28,7 @@
                     @csrf
                     <div>
                         <label for="email" class="form-label">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-input" placeholder="admin@24hstore.local">
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-input" placeholder="admin@gmail.com">
                     </div>
                     <div>
                         <label for="password" class="form-label">Mật khẩu</label>
