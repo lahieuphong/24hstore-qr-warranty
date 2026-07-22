@@ -23,12 +23,15 @@ class Index extends Component
 
     public bool $rateLimited = false;
 
+    public bool $showResultModal = false;
+
     public function search(): void
     {
         $this->imei = Product::normalizeImei($this->imei);
         $this->product = null;
         $this->lookupError = '';
         $this->rateLimited = false;
+        $this->showResultModal = false;
         $this->resetValidation();
 
         $rateLimitKey = 'public-warranty-search:'.request()->ip();
@@ -58,6 +61,12 @@ class Index extends Component
         }
 
         $this->product = (new WarrantyProductResource($product))->resolve(request());
+        $this->showResultModal = true;
+    }
+
+    public function closeResultModal(): void
+    {
+        $this->showResultModal = false;
     }
 
     public function render(): View

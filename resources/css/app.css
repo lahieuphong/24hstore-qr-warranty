@@ -25,6 +25,12 @@
     --admin-border: #e6d9de;
     --admin-muted: #fff1f2;
     --admin-radius: 0.5rem;
+    --public-primary: var(--admin-header);
+    --public-primary-dark: var(--admin-header-dark);
+    --public-accent: var(--admin-module);
+    --public-accent-soft: var(--admin-accent);
+    --public-surface: #fff8fa;
+    --public-border: var(--admin-border);
 }
 
 [x-cloak] {
@@ -103,19 +109,152 @@ body {
 }
 
 .public-form-input {
-    @apply block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-100;
+    @apply block w-full rounded-xl border bg-white px-4 py-3 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-rose-100 disabled:cursor-not-allowed disabled:bg-slate-100;
+    border-color: var(--public-border);
+}
+
+.public-form-input:focus {
+    border-color: var(--public-accent);
 }
 
 .public-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50;
+    background: var(--public-primary);
+}
+
+.public-btn-primary:hover {
+    background: var(--public-primary-dark);
 }
 
 .public-btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-rose-50 hover:text-rose-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-100;
+    border-color: var(--public-border);
 }
 
 .public-card {
-    @apply rounded-3xl border border-white/60 bg-white shadow-2xl shadow-slate-950/20;
+    @apply overflow-hidden rounded-2xl border bg-white shadow-xl shadow-rose-950/5;
+    border-color: var(--public-border);
+}
+
+.public-shell {
+    @apply flex flex-col;
+    background: var(--public-surface);
+}
+
+.public-site-header {
+    border-bottom: 1px solid var(--public-border);
+    background: rgb(255 255 255 / 94%);
+    box-shadow: 0 1px 0 rgb(15 23 42 / 3%);
+    backdrop-filter: blur(14px);
+}
+
+.public-site-footer {
+    border-top: 1px solid var(--public-border);
+    background: rgb(255 255 255 / 88%);
+}
+
+.public-eyebrow {
+    border: 1px solid #fecdd3;
+    background: rgb(255 241 242 / 88%);
+    color: var(--public-primary-dark);
+}
+
+.public-live-badge {
+    border: 1px solid #bbf7d0;
+    background: rgb(236 253 245 / 92%);
+    color: #047857;
+}
+
+.public-lookup-hero {
+    min-height: calc(100dvh - 136px);
+    background: #f8e9e3;
+}
+
+.public-lookup-hero-image {
+    object-position: center center;
+}
+
+.public-lookup-hero-overlay {
+    background:
+        linear-gradient(90deg, rgb(255 248 250 / 98%) 0%, rgb(255 248 250 / 94%) 38%, rgb(255 248 250 / 64%) 58%, rgb(255 248 250 / 12%) 82%),
+        linear-gradient(180deg, rgb(255 255 255 / 10%) 0%, rgb(136 19 55 / 5%) 100%);
+}
+
+.public-search-panel {
+    border: 1px solid rgb(255 255 255 / 85%);
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 88%);
+    box-shadow: 0 24px 70px rgb(75 18 37 / 14%);
+    backdrop-filter: blur(18px);
+}
+
+.public-search-group {
+    @apply flex min-h-[60px] overflow-hidden rounded-xl border bg-white transition focus-within:ring-4 focus-within:ring-rose-200/70;
+    border-color: var(--public-border);
+}
+
+.public-search-group:focus-within {
+    border-color: var(--public-accent);
+}
+
+.public-search-input {
+    @apply h-full min-h-[60px] w-full bg-transparent py-3.5 pl-14 pr-5 text-base text-slate-900 outline-none placeholder:font-sans placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100 sm:text-lg;
+}
+
+.public-search-submit {
+    @apply inline-flex min-w-44 shrink-0 items-center justify-center gap-2 px-7 text-base font-bold text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-60 sm:text-lg;
+    background: var(--public-primary);
+}
+
+.public-search-submit:hover {
+    background: var(--public-primary-dark);
+}
+
+.public-detail-page {
+    background:
+        radial-gradient(circle at 15% 15%, rgb(255 228 230 / 65%), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgb(254 205 211 / 42%), transparent 28%),
+        var(--public-surface);
+}
+
+.public-result-modal {
+    background: rgb(15 23 42 / 48%);
+    -webkit-backdrop-filter: blur(14px) saturate(75%);
+    backdrop-filter: blur(14px) saturate(75%);
+    animation: public-modal-fade-in 160ms ease-out both;
+}
+
+.public-result-dialog {
+    animation: public-modal-rise-in 200ms ease-out both;
+}
+
+.public-result-card {
+    max-height: calc(100dvh - 2rem);
+    border-color: var(--public-border);
+    box-shadow: 0 28px 80px rgb(15 23 42 / 28%);
+}
+
+@keyframes public-modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes public-modal-rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-result-modal,
+    .public-result-dialog {
+        animation: none;
+    }
 }
 
 .card {
@@ -240,6 +379,40 @@ body {
 }
 
 @media (max-width: 640px) {
+    .public-lookup-hero {
+        min-height: auto;
+    }
+
+    .public-lookup-hero-image {
+        object-position: center center;
+    }
+
+    .public-lookup-hero-overlay {
+        background: linear-gradient(180deg, rgb(255 248 250 / 96%) 0%, rgb(255 248 250 / 91%) 64%, rgb(255 248 250 / 78%) 100%);
+    }
+
+    .public-search-panel {
+        background: rgb(255 255 255 / 92%);
+        box-shadow: 0 18px 50px rgb(75 18 37 / 12%);
+    }
+
+    .public-search-group {
+        @apply flex-col gap-3 overflow-visible border-0 bg-transparent focus-within:ring-0;
+    }
+
+    .public-search-group > div {
+        @apply overflow-hidden rounded-xl border bg-white focus-within:ring-4 focus-within:ring-rose-200/70;
+        border-color: var(--public-border);
+    }
+
+    .public-search-input {
+        @apply min-h-[52px] py-3 text-base;
+    }
+
+    .public-search-submit {
+        @apply min-h-[52px] w-full rounded-xl;
+    }
+
     .django-model-row > :last-child {
         justify-content: flex-start;
     }

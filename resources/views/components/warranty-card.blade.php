@@ -12,10 +12,10 @@
 @endphp
 
 <section class="public-card overflow-hidden">
-    <div class="border-b border-slate-200 bg-slate-50 px-5 py-4 sm:px-7">
+    <div class="border-b border-rose-100 bg-rose-50/70 px-5 py-4 sm:px-7">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <p class="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">Kết quả tra cứu</p>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-rose-700">Kết quả tra cứu</p>
                 <h2 class="mt-2 text-xl font-black text-slate-900 sm:text-2xl">{{ $product['name'] }}</h2>
             </div>
             <span class="inline-flex w-fit rounded-full px-3 py-1.5 text-xs font-black ring-1 {{ $statusClass }}">{{ $product['warranty_status_label'] }}</span>
@@ -33,7 +33,7 @@
         </div>
     </dl>
 
-    <dl class="grid gap-px bg-slate-200 sm:grid-cols-3">
+    <dl class="grid gap-px bg-rose-100 sm:grid-cols-3">
         <div class="bg-white p-5 sm:p-6">
             <dt class="text-xs font-bold uppercase tracking-wider text-slate-400">Ngày nhập kho</dt>
             <dd class="mt-2 text-sm font-bold text-slate-900">{{ ! empty($product['warehouse_date']) ? \Illuminate\Support\Carbon::parse($product['warehouse_date'])->format('d/m/Y') : 'Không có' }}</dd>
@@ -48,7 +48,7 @@
         </div>
     </dl>
 
-    <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7">
+    <div class="border-t border-rose-100 bg-rose-50/60 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7">
         Dữ liệu được cập nhật tại thời điểm tra cứu. Ghi chú nội bộ và thông tin tài khoản quản trị luôn được bảo vệ.
     </div>
 </section>

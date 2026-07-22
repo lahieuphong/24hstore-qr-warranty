@@ -69,8 +69,12 @@ class WarrantyLookupTest extends TestCase
             ->call('search')
             ->assertSet('imei', '012345678901234')
             ->assertSet('product.product_code', 'SP-LIVEWIRE')
+            ->assertSet('showResultModal', true)
             ->assertSee('Sản phẩm tra cứu trực tiếp')
-            ->assertDontSee('Không được hiển thị ngoài trang quản trị');
+            ->assertDontSee('Không được hiển thị ngoài trang quản trị')
+            ->call('closeResultModal')
+            ->assertSet('showResultModal', false)
+            ->assertDontSee('Sản phẩm tra cứu trực tiếp');
     }
 
     public function test_qr_check_page_displays_product_without_internal_note(): void
