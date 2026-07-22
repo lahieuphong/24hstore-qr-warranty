@@ -1,78 +1,20 @@
-# Environment and local secrets
+/.phpunit.cache
+/.phpunit.result.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
 .env
-.env.*
-!.env.example
-!.env.production.example
-!.env.*.example
-auth.json
-
-# PHP / Composer dependencies and local tools
-vendor/
-!backend/resources/views/vendor/
-!backend/resources/views/vendor/**
-composer.phar
-.phpunit.cache/
-.phpunit.result.cache
-.pest.cache/
-.php-cs-fixer.cache
-.phpactor.json
-.phpstan.cache/
-.pint.cache
-coverage/
-.coverage
-
-# Yarn / Node dependencies and caches
-node_modules/
-yarn-error.log
-yarn-debug.log
-.yarn-cache/
-.vite/
-
-# Keep backend/yarn.lock and frontend/yarn.lock under version control.
-
-# Laravel and Vite generated files
-/backend/public/build/
-/frontend/public/build/
-/backend/public/hot
-/frontend/public/hot
-/backend/public/storage
-/frontend/public/storage
-/backend/storage/*.key
-/frontend/storage/*.key
-/backend/storage/pail/
-/frontend/storage/pail/
-
-# Local VM configuration
+.env.backup
+.env.production
 Homestead.json
 Homestead.yaml
-
-# Local databases and database dumps
-*.sqlite
-*.sqlite-*
-*.sqlite3
-*.sqlite3-*
-*.db
-*.db-*
-*.dump
-*.sql
-*.sql.gz
-
-# Logs and temporary files
-*.log
-*.pid
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-
-# IDEs and editors
-.idea/
-.vscode/
-.fleet/
-
-# Operating-system metadata
+auth.json
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
 .DS_Store
-._*
-Thumbs.db
-Desktop.ini

@@ -1,84 +1,36 @@
 # 24hStore QR Warranty
 
-Ứng dụng đang chạy chính nằm trong `backend/`:
+Ứng dụng Laravel 12 + Livewire 4 thống nhất gồm:
 
-- Quản trị tại `/admin`.
-- Tra cứu IMEI công khai tại `/check` và mở QR tại `/check/{qr_token}`.
-- REST API, database, import, QR/PDF và nhật ký hoạt động.
+- Custom Administration tại `/admin`.
+- Trang tra cứu IMEI công khai tại `/check` và trang QR tại `/check/{qr_token}`.
+- MySQL/PostgreSQL là database production.
+- REST API v1 cho các tích hợp tra cứu.
+- CRUD sản phẩm, QR/PDF, import Excel, tài khoản/phân quyền và audit log.
 
-Thư mục `frontend/` là mã giao diện tách riêng trước đây, chỉ giữ lại để tham khảo; không cần chạy khi phát triển local.
-
-## 1. Kiến trúc
-
-```text
-Nhân viên -> Backend /admin -> MySQL/PostgreSQL
-Khách hàng -> Backend /check -> MySQL/PostgreSQL
-```
-
-QR luôn trỏ về đường dẫn chuẩn `/check/{qr_token}` trên cùng backend.
-
-## 2. Chức năng chính
-
-- Quản lý sản phẩm, IMEI, thời hạn bảo hành và trạng thái.
-- Tạo QR/PDF, import Excel/CSV và tra cứu bảo hành.
-- Quản lý tài khoản, phân quyền và nhật ký hoạt động.
-
-Chi tiết trang quản trị: [`docs/CUSTOM-ADMIN.md`](docs/CUSTOM-ADMIN.md).
-
-## 3. Cài đặt lần đầu
-
-MySQL/PostgreSQL phải được khởi động và thông tin `DB_*` phải khớp với database đã tạo.
-
-Backend:
+## Local
 
 ```bash
-cd backend
-# cập nhật file .env: APP_URL=http://127.0.0.1:8000 và cấu hình DB_*
+# cập nhật .env: APP_URL=http://127.0.0.1:8000 và cấu hình DB_*
 composer install
 php artisan key:generate
 php artisan migrate --seed
 yarn install --frozen-lockfile
 yarn build
-cd ..
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-## 4. Chạy ứng dụng
-
-Chỉ cần mở một terminal tại thư mục gốc và chạy backend.
-
-macOS/Linux:
+Hoặc khởi động nhanh
+Trên macOS/Linux:
 
 ```bash
-./start-backend
+./start-app
 ```
 
-Windows:
+Trên Windows:
 
 ```bat
-start-backend.bat
+start-app.bat
 ```
 
-- Admin: `http://127.0.0.1:8000/admin`
-- Tra cứu IMEI: `http://127.0.0.1:8000/check`
-- Dừng server: nhấn `Ctrl+C` trong terminal.
-
-## 5. API public
-
-```text
-GET /api/v1/health
-GET /api/v1/warranties/{qr_token}
-GET /api/v1/warranties/search?imei={imei}
-```
-
-## 6. Kiểm thử
-
-```bash
-(cd backend && php artisan test && ./vendor/bin/pint --test)
-```
-
-## 7. Deploy
-
-- Admin và trang tra cứu công khai: `backend/public`
-- Hướng dẫn chi tiết: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
-
-Không commit `vendor/`, `node_modules/` hoặc file `.env`.
+Mở `http://127.0.0.1:8000/admin` để quản trị hoặc `http://127.0.0.1:8000/check` để tra cứu IMEI. QR dùng URL `/check/{qr_token}` trên cùng ứng dụng.

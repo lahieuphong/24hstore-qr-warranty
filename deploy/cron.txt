@@ -1,1 +1,0 @@
-* * * * * cd /var/www/24hstore-qr-warranty/backend && /usr/bin/php artisan schedule:run >> /dev/null 2>&1

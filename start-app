@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+if ! command -v php >/dev/null 2>&1; then
+    echo "[ERROR] PHP was not found in PATH."
+    exit 1
+fi
+
+if [[ ! -f .env ]]; then
+    echo "[ERROR] .env does not exist."
+    exit 1
+fi
+
+if [[ ! -f vendor/autoload.php ]]; then
+    echo "[ERROR] PHP dependencies are missing. Run: composer install"
+    exit 1
+fi
+
+if [[ ! -f public/build/manifest.json ]]; then
+    echo "[ERROR] Application assets are missing. Run: yarn install --frozen-lockfile && yarn build"
+    exit 1
+fi
+
+echo "Ứng dụng: http://127.0.0.1:8000"
+echo "Admin:    http://127.0.0.1:8000/admin"
+echo "Tra cứu:  http://127.0.0.1:8000/check"
+echo "Press Ctrl+C to stop."
+echo
+
+exec php artisan serve --host=127.0.0.1 --port=8000
