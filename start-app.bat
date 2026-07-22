@@ -40,6 +40,8 @@ echo API:   http://127.0.0.1:8000/api/v1
 echo Press Ctrl+C to stop the server.
 echo.
 
+set "PHP_CLI_SERVER_WORKERS="
+
 php artisan serve --host=127.0.0.1 --port=8000
 set "EXIT_CODE=%ERRORLEVEL%"
 

@@ -31,4 +31,4 @@ echo "Tra cứu:  http://127.0.0.1:8000/check"
 echo "Press Ctrl+C to stop."
 echo
 
-exec php artisan serve --host=127.0.0.1 --port=8000
+exec env -u PHP_CLI_SERVER_WORKERS php artisan serve --host=127.0.0.1 --port=8000
