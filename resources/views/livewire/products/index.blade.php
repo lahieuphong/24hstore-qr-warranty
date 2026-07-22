@@ -199,22 +199,22 @@
                             </td>
                             <td class="px-4 py-4">
                                 <div class="flex flex-wrap justify-end gap-2">
-                                    <button type="button" wire:click="showQr({{ $product->id }})" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">
-                                        Xem QR
+                                    <button type="button" wire:click="showQr({{ $product->id }})" class="admin-icon-action" aria-label="Xem QR" title="Xem QR">
+                                        <x-lucide-qr-code class="size-4" aria-hidden="true" />
                                     </button>
                                     @can('products.print')
-                                        <a href="{{ route('admin.products.label', $product) }}" target="_blank" rel="noopener" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100">
-                                            Tem PDF
+                                        <a href="{{ route('admin.products.label', $product) }}" target="_blank" rel="noopener" class="admin-icon-action admin-icon-action-primary" aria-label="Tem PDF" title="Tem PDF">
+                                            <x-lucide-file-text class="size-4" aria-hidden="true" />
                                         </a>
                                     @endcan
                                     @can('products.update')
-                                        <button type="button" wire:click="edit({{ $product->id }})" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">
-                                            Sửa
+                                        <button type="button" wire:click="edit({{ $product->id }})" class="admin-icon-action" aria-label="Sửa" title="Sửa">
+                                            <x-lucide-pencil class="size-4" aria-hidden="true" />
                                         </button>
                                     @endcan
                                     @can('products.delete')
-                                        <button type="button" wire:click="confirmDelete({{ $product->id }})" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100">
-                                            Xóa
+                                        <button type="button" wire:click="confirmDelete({{ $product->id }})" class="admin-icon-action admin-icon-action-danger" aria-label="Xóa" title="Xóa">
+                                            <x-lucide-trash-2 class="size-4" aria-hidden="true" />
                                         </button>
                                     @endcan
                                 </div>
