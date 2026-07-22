@@ -40,11 +40,15 @@ class Index extends Component
 
     public bool $showQrModal = false;
 
+    public bool $showDownloadModal = false;
+
     public ?int $editingId = null;
 
     public ?int $deletingId = null;
 
     public ?int $qrProductId = null;
+
+    public ?int $downloadProductId = null;
 
     public string $product_code = '';
 
@@ -233,6 +237,23 @@ class Index extends Component
         $this->qrProductId = null;
     }
 
+    public function confirmDownload(int $id): void
+    {
+        $product = Product::query()->findOrFail($id);
+        $this->authorize('print', $product);
+
+        $this->downloadProductId = $product->id;
+        $this->showQrModal = false;
+        $this->qrProductId = null;
+        $this->showDownloadModal = true;
+    }
+
+    public function closeDownload(): void
+    {
+        $this->showDownloadModal = false;
+        $this->downloadProductId = null;
+    }
+
     public function selectCurrentPage(): void
     {
         $ids = $this->productsQuery()
@@ -256,11 +277,13 @@ class Index extends Component
     public function render(): View
     {
         $qrProduct = $this->qrProductId ? Product::query()->find($this->qrProductId) : null;
+        $downloadProduct = $this->downloadProductId ? Product::query()->find($this->downloadProductId) : null;
 
         return view('livewire.products.index', [
             'products' => $this->productsQuery()->paginate($this->perPage),
             'statuses' => WarrantyStatus::options(),
             'qrProduct' => $qrProduct,
+            'downloadProduct' => $downloadProduct,
         ]);
     }
 

@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Products\Index as ProductIndex;
 use App\Models\AdminActivityLog;
 use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AdminChromeTest extends TestCase
@@ -53,6 +55,52 @@ class AdminChromeTest extends TestCase
             ->assertOk()
             ->assertSee('Thời gian')
             ->assertSee('18/07/2026 18:59');
+    }
+
+    public function test_product_pdf_download_requires_confirmation(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+        $product = Product::factory()->create([
+            'name' => 'Sản phẩm tải tem xác nhận',
+            'imei' => '012345678901234',
+        ]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ProductIndex::class)
+            ->call('confirmDownload', $product->id)
+            ->assertSet('showDownloadModal', true)
+            ->assertSet('downloadProductId', $product->id)
+            ->assertSee('Xác nhận tải tem PDF?')
+            ->assertSee('Sản phẩm tải tem xác nhận')
+            ->assertSee('Tải về máy')
+            ->call('closeDownload')
+            ->assertSet('showDownloadModal', false)
+            ->assertSet('downloadProductId', null);
+    }
+
+    public function test_selected_products_replace_the_result_toolbar_actions(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+        Product::factory()->count(2)->create();
+
+        $this->actingAs($user);
+
+        Livewire::test(ProductIndex::class)
+            ->assertSee('Kết quả:')
+            ->assertSee('Chọn tất cả')
+            ->call('selectCurrentPage')
+            ->assertSee('Đã chọn 2 sản phẩm.')
+            ->assertSee('Bỏ chọn')
+            ->assertSee('Xuất tem PDF')
+            ->assertDontSee('Kết quả:')
+            ->assertDontSee('Chọn tất cả')
+            ->call('clearSelection')
+            ->assertSet('selected', []);
     }
 
     public function test_user_table_uses_the_same_created_time_format(): void

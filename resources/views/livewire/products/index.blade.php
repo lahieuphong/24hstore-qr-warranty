@@ -52,38 +52,38 @@
         </div>
     </section>
 
-    @if (count($selected) > 0)
-        <div class="flex flex-col gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-sm font-semibold text-rose-900">Đã chọn {{ count($selected) }} sản phẩm.</p>
-            <div class="flex flex-wrap gap-2">
-                <button type="button" wire:click="clearSelection" class="btn-secondary">Bỏ chọn</button>
-                @can('products.print')
-                    <a
-                        href="{{ route('admin.labels.bulk', ['ids' => implode(',', $selected)]) }}"
-                        target="_blank"
-                        rel="noopener"
-                        class="btn-primary"
-                    >
-                        Xuất tem PDF
-                    </a>
-                @endcan
-            </div>
-        </div>
-    @endif
-
     <section class="card overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
-            <p class="text-sm text-slate-500">
-                Kết quả: <span class="font-bold text-slate-800">{{ number_format($products->total()) }}</span> sản phẩm
-            </p>
-            <button type="button" wire:click="selectCurrentPage" class="text-sm font-semibold text-rose-700 hover:text-rose-900">
-                Chọn các dòng trang này
-            </button>
+        <div class="flex h-16 flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 sm:px-5">
+            @if (count($selected) > 0)
+                <p class="text-sm font-semibold text-rose-900">
+                    Đã chọn {{ number_format(count($selected)) }} sản phẩm.
+                </p>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" wire:click="clearSelection" class="btn-secondary">Bỏ chọn</button>
+                    @can('products.print')
+                        <a
+                            href="{{ route('admin.labels.bulk', ['ids' => implode(',', $selected)]) }}"
+                            target="_blank"
+                            rel="noopener"
+                            class="btn-primary"
+                        >
+                            Xuất tem PDF
+                        </a>
+                    @endcan
+                </div>
+            @else
+                <p class="text-sm text-slate-500">
+                    Kết quả: <span class="font-bold text-slate-800">{{ number_format($products->total()) }}</span> sản phẩm
+                </p>
+                <button type="button" wire:click="selectCurrentPage" class="btn-primary">
+                    Chọn tất cả
+                </button>
+            @endif
         </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                <thead class="bg-slate-50 text-left text-xs font-bold tracking-wider text-slate-500">
                     <tr>
                         <th class="w-12 px-4 py-3"><span class="sr-only">Chọn</span></th>
                         <th
@@ -156,7 +156,7 @@
                                 @endif
                             </button>
                         </th>
-                        <th class="min-w-56 px-4 py-3 text-right">Thao tác</th>
+                        <th class="min-w-56 px-4 py-3 text-center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -203,9 +203,9 @@
                                         <x-lucide-qr-code class="size-4" aria-hidden="true" />
                                     </button>
                                     @can('products.print')
-                                        <a href="{{ route('admin.products.label', $product) }}" target="_blank" rel="noopener" class="admin-icon-action admin-icon-action-primary" aria-label="Tem PDF" title="Tem PDF">
+                                        <button type="button" wire:click="confirmDownload({{ $product->id }})" class="admin-icon-action admin-icon-action-primary" aria-label="Tem PDF" title="Tem PDF">
                                             <x-lucide-file-text class="size-4" aria-hidden="true" />
-                                        </a>
+                                        </button>
                                     @endcan
                                     @can('products.update')
                                         <button type="button" wire:click="edit({{ $product->id }})" class="admin-icon-action" aria-label="Sửa" title="Sửa">
@@ -355,8 +355,61 @@
                         Sao chép link
                     </button>
                     @can('products.print')
-                        <a href="{{ route('admin.products.label', $qrProduct) }}" target="_blank" rel="noopener" class="btn-primary">Tải tem PDF</a>
+                        <button type="button" wire:click="confirmDownload({{ $qrProduct->id }})" class="btn-primary">
+                            <x-lucide-file-down class="size-4" aria-hidden="true" />
+                            Tải tem PDF
+                        </button>
                     @endcan
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($showDownloadModal && $downloadProduct)
+        <div
+            class="fixed inset-0 z-[80] grid place-items-center bg-slate-950/50 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="download-pdf-title"
+            aria-describedby="download-pdf-description"
+            x-on:keydown.escape.window="$wire.closeDownload()"
+            x-on:click.self="$wire.closeDownload()"
+        >
+            <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-700">
+                        <x-lucide-file-down class="size-6" aria-hidden="true" />
+                    </div>
+                    <button type="button" wire:click="closeDownload" class="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800" aria-label="Đóng xác nhận tải PDF">
+                        <x-lucide-x class="size-5" aria-hidden="true" />
+                    </button>
+                </div>
+
+                <h2 id="download-pdf-title" class="mt-5 text-xl font-black text-slate-900">Xác nhận tải tem PDF?</h2>
+                <p id="download-pdf-description" class="mt-3 text-sm leading-6 text-slate-600">
+                    Bạn có muốn tải tem PDF của <span class="font-bold text-slate-900">{{ $downloadProduct->name }}</span> về máy không?
+                </p>
+
+                <div class="mt-4 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-rose-700">IMEI</p>
+                    <p class="mt-1 break-all font-mono text-sm font-semibold text-slate-800">{{ $downloadProduct->imei }}</p>
+                </div>
+
+                <p class="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-500">
+                    <x-lucide-download class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                    Tệp PDF sẽ được tải xuống thiết bị đang sử dụng.
+                </p>
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" wire:click="closeDownload" class="btn-secondary">Hủy</button>
+                    <a
+                        href="{{ route('admin.products.label', $downloadProduct) }}"
+                        x-on:click="$wire.closeDownload()"
+                        class="btn-primary"
+                    >
+                        <x-lucide-download class="size-4" aria-hidden="true" />
+                        Tải về máy
+                    </a>
                 </div>
             </div>
         </div>
