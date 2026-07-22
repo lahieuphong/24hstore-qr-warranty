@@ -14,7 +14,7 @@
                     Thêm sản phẩm
                 </a>
             @endcan
-            <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="btn-secondary">
+            <a href="{{ route('warranty.check') }}" target="_blank" rel="noopener" class="btn-secondary">
                 Xem trang tra cứu
                 <x-lucide-external-link class="size-4" aria-hidden="true" />
             </a>
@@ -122,8 +122,8 @@
                         <dd class="mt-2 text-sm font-semibold text-slate-700">{{ $system['environment'] }}</dd>
                     </div>
                     <div class="bg-white p-4 sm:col-span-2 xl:col-span-4">
-                        <dt class="django-detail-label">Frontend public</dt>
-                        <dd class="mt-2 break-all font-mono text-xs text-slate-600">{{ $system['frontend_url'] }}</dd>
+                        <dt class="django-detail-label">Trang tra cứu công khai</dt>
+                        <dd class="mt-2 break-all font-mono text-xs text-slate-600">{{ $system['public_lookup_url'] }}</dd>
                     </div>
                 </dl>
             </section>

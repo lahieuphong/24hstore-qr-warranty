@@ -1,18 +1,21 @@
-# 24hStore QR Warranty - Backend + Frontend
+# 24hStore QR Warranty
 
-Hệ thống gồm hai ứng dụng độc lập:
+Ứng dụng đang chạy chính nằm trong `backend/`:
 
-- `backend/`: Laravel + Livewire, quản trị tại `/admin`, REST API và database.
-- `frontend/`: trang tra cứu bảo hành công khai, chỉ lấy dữ liệu qua backend API.
+- Quản trị tại `/admin`.
+- Tra cứu IMEI công khai tại `/check` và mở QR tại `/check/{qr_token}`.
+- REST API, database, import, QR/PDF và nhật ký hoạt động.
+
+Thư mục `frontend/` là mã giao diện tách riêng trước đây, chỉ giữ lại để tham khảo; không cần chạy khi phát triển local.
 
 ## 1. Kiến trúc
 
 ```text
 Nhân viên -> Backend /admin -> MySQL/PostgreSQL
-Khách hàng -> Frontend -> Backend /api/v1 -> MySQL/PostgreSQL
+Khách hàng -> Backend /check -> MySQL/PostgreSQL
 ```
 
-QR luôn trỏ về frontend qua cấu hình `FRONTEND_URL`.
+QR luôn trỏ về đường dẫn chuẩn `/check/{qr_token}` trên cùng backend.
 
 ## 2. Chức năng chính
 
@@ -30,8 +33,7 @@ Backend:
 
 ```bash
 cd backend
-cp .env.example .env
-# cấu hình DB_* và FRONTEND_URL=http://localhost:8001
+# cập nhật file .env: APP_URL=http://127.0.0.1:8000 và cấu hình DB_*
 composer install
 php artisan key:generate
 php artisan migrate --seed
@@ -40,40 +42,25 @@ yarn build
 cd ..
 ```
 
-Frontend:
-
-```bash
-cd frontend
-cp .env.example .env
-# cấu hình BACKEND_API_URL=http://localhost:8000/api/v1
-composer install
-php artisan key:generate
-yarn install --frozen-lockfile
-yarn build
-cd ..
-```
-
 ## 4. Chạy ứng dụng
 
-Mở hai terminal tại thư mục gốc, chạy backend trước và frontend sau.
+Chỉ cần mở một terminal tại thư mục gốc và chạy backend.
 
 macOS/Linux:
 
 ```bash
 ./start-backend
-./start-frontend
 ```
 
 Windows:
 
 ```bat
 start-backend.bat
-start-frontend.bat
 ```
 
-- Admin: `http://localhost:8000/admin`
-- Frontend: `http://localhost:8001`
-- Dừng server: nhấn `Ctrl+C` trong terminal tương ứng.
+- Admin: `http://127.0.0.1:8000/admin`
+- Tra cứu IMEI: `http://127.0.0.1:8000/check`
+- Dừng server: nhấn `Ctrl+C` trong terminal.
 
 ## 5. API public
 
@@ -87,13 +74,11 @@ GET /api/v1/warranties/search?imei={imei}
 
 ```bash
 (cd backend && php artisan test && ./vendor/bin/pint --test)
-(cd frontend && php artisan test && ./vendor/bin/pint --test)
 ```
 
 ## 7. Deploy
 
-- Backend/admin: `backend/public`
-- Frontend công khai: `frontend/public`
+- Admin và trang tra cứu công khai: `backend/public`
 - Hướng dẫn chi tiết: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 
 Không commit `vendor/`, `node_modules/` hoặc file `.env`.

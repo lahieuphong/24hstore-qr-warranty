@@ -11,10 +11,21 @@ use App\Livewire\Dashboard;
 use App\Livewire\Imports\Index as ImportIndex;
 use App\Livewire\Products\Index as ProductIndex;
 use App\Livewire\Profile;
+use App\Livewire\PublicWarranty\Index as PublicWarrantyIndex;
+use App\Livewire\PublicWarranty\Show as PublicWarrantyShow;
 use App\Livewire\Users\Index as UserIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+
+Route::get('/check', PublicWarrantyIndex::class)
+    ->middleware('throttle:public-warranty')
+    ->name('warranty.check');
+
+Route::get('/check/{token}', PublicWarrantyShow::class)
+    ->whereUuid('token')
+    ->middleware('throttle:public-warranty')
+    ->name('warranty.show');
 
 Route::get('/login', [AuthenticatedSessionController::class, 'legacy'])->name('login.legacy');
 
@@ -26,8 +37,8 @@ Route::middleware('guest')->group(function (): void {
 });
 
 Route::get('/bao-hanh/{product:qr_token}', WarrantyLookupController::class)
-    ->middleware('throttle:120,1')
-    ->name('warranty.show');
+    ->middleware('throttle:public-warranty')
+    ->name('warranty.legacy');
 
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

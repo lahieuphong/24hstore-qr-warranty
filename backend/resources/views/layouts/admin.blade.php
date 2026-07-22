@@ -47,7 +47,7 @@
             <div class="hidden items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/90 lg:flex">
                 <span class="mr-1">Xin chào, <strong class="text-white">{{ auth()->user()->name }}</strong></span>
                 <span class="text-white/40">/</span>
-                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-utility-link">Xem trang tra cứu</a>
+                <a href="{{ route('warranty.check') }}" target="_blank" rel="noopener" class="django-utility-link">Xem trang tra cứu</a>
                 <span class="text-white/40">/</span>
                 <a href="{{ route('admin.profile') }}" class="django-utility-link">Đổi mật khẩu</a>
                 <span class="text-white/40">/</span>
@@ -82,7 +82,7 @@
                     <a href="{{ route('admin.activity.index') }}" class="django-mobile-nav-link">Hoạt động quản trị</a>
                 @endcan
                 <a href="{{ route('admin.profile') }}" class="django-mobile-nav-link">Hồ sơ / Đổi mật khẩu</a>
-                <a href="{{ config('services.frontend.url') }}" target="_blank" rel="noopener" class="django-mobile-nav-link flex items-center gap-2">
+                <a href="{{ route('warranty.check') }}" target="_blank" rel="noopener" class="django-mobile-nav-link flex items-center gap-2">
                     Mở trang tra cứu
                     <x-lucide-external-link class="size-4" aria-hidden="true" />
                 </a>

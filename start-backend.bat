@@ -14,7 +14,7 @@ if errorlevel 1 (
 
 if not exist ".env" (
     echo [ERROR] backend\.env does not exist.
-    echo Create it from backend\.env.example and configure APP_KEY and DB_* first.
+    echo Create backend\.env and configure APP_KEY and DB_* first.
     pause
     exit /b 1
 )
@@ -35,6 +35,7 @@ if not exist "public\build\manifest.json" (
 
 echo Starting the backend at http://127.0.0.1:8000
 echo Admin: http://127.0.0.1:8000/admin
+echo Tra cuu: http://127.0.0.1:8000/check
 echo API:   http://127.0.0.1:8000/api/v1
 echo Press Ctrl+C to stop the server.
 echo.

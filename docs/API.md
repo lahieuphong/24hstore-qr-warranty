@@ -39,7 +39,7 @@ GET /warranties/search?imei=012345678901234
     "warranty_expires_at": "2027-01-15",
     "warranty_status": "active",
     "warranty_status_label": "Còn bảo hành",
-    "lookup_url": "https://warranty.example.com/bao-hanh/...",
+    "lookup_url": "https://admin-warranty.example.com/check/...",
     "updated_at": "2026-07-16T10:00:00+07:00"
   }
 }

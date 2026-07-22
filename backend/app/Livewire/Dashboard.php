@@ -126,7 +126,7 @@ class Dashboard extends Component
             'cache_store' => (string) config('cache.default'),
             'storage_writable' => is_writable(storage_path()) && is_writable(base_path('bootstrap/cache')),
             'environment' => app()->environment(),
-            'frontend_url' => (string) config('services.frontend.url'),
+            'public_lookup_url' => route('warranty.check'),
         ];
     }
 }

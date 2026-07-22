@@ -1,9 +1,6 @@
 <?php
 
 return [
-    'frontend' => [
-        'url' => rtrim((string) env('FRONTEND_URL', 'http://localhost:8001'), '/'),
-    ],
     'postmark' => ['token' => env('POSTMARK_TOKEN')],
     'resend' => ['key' => env('RESEND_KEY')],
     'ses' => [

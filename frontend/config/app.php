@@ -4,7 +4,7 @@ return [
     'name' => env('APP_NAME', '24hStore Warranty Lookup'),
     'env' => env('APP_ENV', 'production'),
     'debug' => env('APP_DEBUG', false),
-    'url' => env('APP_URL', 'http://localhost:8001'),
+    'url' => env('APP_URL', 'http://127.0.0.1:8000'),
     'force_https' => env('FORCE_HTTPS', false),
     'timezone' => env('APP_TIMEZONE', 'Asia/Ho_Chi_Minh'),
     'locale' => env('APP_LOCALE', 'vi'),

@@ -106,7 +106,7 @@ class Product extends Model
 
     public function publicLookupUrl(): string
     {
-        return rtrim((string) config('services.frontend.url'), '/').'/bao-hanh/'.$this->qr_token;
+        return route('warranty.show', ['token' => $this->qr_token]);
     }
 
     public static function normalizeImei(string $imei): string
