@@ -12,9 +12,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
-if not exist ".env" (
-    echo [ERROR] .env does not exist.
-    echo Create .env and configure APP_KEY and DB_* first.
+if not exist ".env.development" (
+    echo [ERROR] .env.development does not exist.
+    echo Create .env.development and configure APP_KEY and DB_* first.
     pause
     exit /b 1
 )
@@ -33,6 +33,13 @@ if not exist "public\build\manifest.json" (
     exit /b 1
 )
 
+php artisan config:clear --env=development --quiet
+if errorlevel 1 (
+    echo [ERROR] Unable to clear the configuration cache.
+    pause
+    exit /b 1
+)
+
 echo Starting the application at http://127.0.0.1:8000
 echo Admin: http://127.0.0.1:8000/admin
 echo Tra cuu: http://127.0.0.1:8000/check
@@ -42,7 +49,7 @@ echo.
 
 set "PHP_CLI_SERVER_WORKERS="
 
-php artisan serve --host=127.0.0.1 --port=8000
+php artisan serve --env=development --host=127.0.0.1 --port=8000
 set "EXIT_CODE=%ERRORLEVEL%"
 
 if not "%EXIT_CODE%"=="0" (
