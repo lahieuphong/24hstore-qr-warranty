@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Console/Commands',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        // Render terminates HTTPS at its cloud load balancer and forwards the
+        // original scheme and client address through standard proxy headers.
+        $middleware->trustProxies(at: '*');
+
         $middleware->redirectGuestsTo(function (Request $request): string {
             $next = $request->is('admin') || $request->is('admin/*')
                 ? $request->getRequestUri()
