@@ -14,7 +14,7 @@
             type="button"
             wire:click="openTemplatePreview"
             x-ref="templatePreviewTrigger"
-            class="btn-secondary"
+            class="btn-excel"
             aria-haspopup="dialog"
             aria-controls="template-preview-dialog"
             aria-expanded="{{ $showTemplatePreview ? 'true' : 'false' }}"
@@ -191,13 +191,13 @@
                         </span>
                     </div>
 
-                    <div class="overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-sm">
-                        <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2.5">
-                            <div class="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                                <x-lucide-table-2 class="size-4 text-rose-700" aria-hidden="true" />
+                    <div class="overflow-hidden rounded-2xl border border-[#a6cbb6] bg-white shadow-sm">
+                        <div class="flex items-center justify-between gap-3 border-b border-[#c6ddd0] bg-[#f3f8f5] px-4 py-2.5">
+                            <div class="flex items-center gap-2 text-xs font-semibold text-[#185c37]">
+                                <x-lucide-table-2 class="size-4 text-[#217346]" aria-hidden="true" />
                                 Bảng dữ liệu mẫu
                             </div>
-                            <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-[11px] font-semibold text-slate-500">Chỉ xem</span>
+                            <span class="rounded-md border border-[#b7d5c3] bg-white px-2 py-1 text-[11px] font-semibold text-[#185c37]">Chỉ xem</span>
                         </div>
 
                         <div class="overflow-x-auto">
@@ -211,25 +211,25 @@
                                     <col class="w-52">
                                 </colgroup>
                                 <thead>
-                                    <tr class="bg-slate-100 text-center font-bold text-slate-500" aria-hidden="true">
-                                        <th class="border-b border-r border-slate-300 px-2 py-2"></th>
+                                    <tr class="bg-[#e7f0ea] text-center font-bold text-[#466354]" aria-hidden="true">
+                                        <th class="border-b border-r border-[#b7cdbf] px-2 py-2"></th>
                                         @foreach ($templateHeadings as $index => $heading)
-                                            <th class="border-b border-r border-slate-300 px-3 py-2 last:border-r-0">{{ chr(65 + $index) }}</th>
+                                            <th class="border-b border-r border-[#b7cdbf] px-3 py-2 last:border-r-0">{{ chr(65 + $index) }}</th>
                                         @endforeach
                                     </tr>
-                                    <tr class="bg-rose-50 font-bold text-rose-950">
-                                        <th scope="row" class="border-b border-r border-slate-300 bg-slate-100 px-2 py-3 text-center text-slate-500">1</th>
+                                    <tr class="bg-[#d9eadf] font-bold text-[#173f2b]">
+                                        <th scope="row" class="border-b border-r border-[#b7cdbf] bg-[#e7f0ea] px-2 py-3 text-center text-[#466354]">1</th>
                                         @foreach ($templateHeadings as $heading)
-                                            <th scope="col" class="border-b border-r border-slate-300 px-3 py-3 last:border-r-0">{{ $heading }}</th>
+                                            <th scope="col" class="border-b border-r border-[#b7cdbf] px-3 py-3 last:border-r-0">{{ $heading }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($templateRows as $rowIndex => $row)
                                         <tr class="bg-white text-slate-700">
-                                            <th scope="row" class="border-b border-r border-slate-300 bg-slate-50 px-2 py-3 text-center font-bold text-slate-400">{{ $rowIndex + 2 }}</th>
+                                            <th scope="row" class="border-b border-r border-[#cbd8d0] bg-[#f3f8f5] px-2 py-3 text-center font-bold text-[#688071]">{{ $rowIndex + 2 }}</th>
                                             @foreach ($row as $cellIndex => $cell)
-                                                <td class="border-b border-r border-slate-300 px-3 py-3 last:border-r-0 {{ $cellIndex === 2 ? 'font-mono font-semibold text-slate-900' : '' }}">{{ $cell }}</td>
+                                                <td class="border-b border-r border-[#cbd8d0] px-3 py-3 last:border-r-0 {{ $cellIndex === 2 ? 'font-mono font-semibold text-slate-900' : '' }}">{{ $cell }}</td>
                                             @endforeach
                                         </tr>
                                     @endforeach
@@ -237,8 +237,8 @@
                             </table>
                         </div>
 
-                        <div class="flex items-center border-t border-slate-200 bg-slate-50 px-4 py-2">
-                            <span class="inline-flex items-center gap-2 border-b-2 border-rose-700 px-3 py-1 text-xs font-bold text-rose-800">
+                        <div class="flex items-center border-t border-[#c6ddd0] bg-[#f3f8f5] px-4 py-2">
+                            <span class="inline-flex items-center gap-2 border-b-2 border-[#217346] px-3 py-1 text-xs font-bold text-[#185c37]">
                                 <x-lucide-sheet class="size-3.5" aria-hidden="true" />
                                 Sản phẩm
                             </span>

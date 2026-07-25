@@ -154,6 +154,44 @@ body {
     @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
+.btn-excel {
+    @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    border-color: #185c37;
+    background: #217346;
+}
+
+.btn-excel:hover {
+    border-color: #143f28;
+    background: #185c37;
+}
+
+.btn-excel:focus-visible {
+    --tw-ring-color: rgb(33 115 70 / 35%);
+}
+
+.btn-excel-soft {
+    @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    border-color: #9bc7ad;
+    color: #185c37;
+    background: linear-gradient(180deg, #f8fdf9 0%, #e8f5ed 100%);
+    box-shadow: 0 2px 6px rgb(24 92 55 / 10%), inset 0 1px 0 rgb(255 255 255 / 90%);
+}
+
+.btn-excel-soft:hover {
+    border-color: #75ae8d;
+    background: linear-gradient(180deg, #f2faf5 0%, #d9eee2 100%);
+    box-shadow: 0 4px 12px rgb(24 92 55 / 16%), inset 0 1px 0 rgb(255 255 255 / 95%);
+    transform: translateY(-1px);
+}
+
+.btn-excel-soft:active {
+    transform: translateY(0);
+}
+
+.btn-excel-soft:focus-visible {
+    --tw-ring-color: rgb(33 115 70 / 28%);
+}
+
 .btn-danger {
     @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }

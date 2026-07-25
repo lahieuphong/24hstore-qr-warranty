@@ -8,7 +8,10 @@
         </div>
         <div class="flex flex-wrap gap-2">
             @can('products.import')
-                <a href="{{ route('admin.imports.index') }}" class="btn-secondary">Import Excel</a>
+                <a href="{{ route('admin.imports.index') }}" class="btn-excel-soft">
+                    <x-lucide-file-spreadsheet class="size-4" aria-hidden="true" />
+                    Import Excel
+                </a>
             @endcan
             @can('products.create')
                 <button type="button" wire:click="create" class="btn-primary">
