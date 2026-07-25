@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -8,6 +9,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,9 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 $next = '/admin/';
             }
 
-            $encodedNext = str_replace('%2F', '/', rawurlencode($next));
-
-            return url('/admin/login').'/?next='.$encodedNext;
+            return AuthenticatedSessionController::loginUrl($next);
         });
         $middleware->redirectUsersTo(fn () => url('/admin').'/');
 
@@ -47,6 +47,17 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Sử dụng cơ chế xử lý ngoại lệ mặc định của Laravel.
+        $exceptions->respond(function (Response $response, Throwable $exception, Request $request): Response {
+            if ($response->getStatusCode() !== 419 || ! $request->routeIs('login.store')) {
+                return $response;
+            }
+
+            return redirect()
+                ->to(AuthenticatedSessionController::loginUrl(
+                    $request->input('next'),
+                    ['expired' => 1],
+                ), 303)
+                ->withInput($request->only('email', 'remember'));
+        });
     })
     ->create();

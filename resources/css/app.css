@@ -97,9 +97,18 @@ body {
     @apply mb-1.5 block text-sm font-semibold text-slate-700;
 }
 
+.login-password-input {
+    height: 2.5rem;
+}
+
 .login-password-input[type='password'] {
     font-size: 1.25rem;
     letter-spacing: 0.05em;
+}
+
+.login-password-input::placeholder {
+    font-size: 0.875rem;
+    letter-spacing: normal;
 }
 
 .login-password-input[type='text'] {
@@ -114,6 +123,22 @@ body {
 
 .login-checkbox:hover {
     accent-color: var(--admin-link-hover);
+}
+
+.login-success-progress {
+    transform-origin: left center;
+    animation: login-success-progress 2s ease-out both;
+}
+
+@keyframes login-success-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-success-progress {
+        animation: none;
+    }
 }
 
 .btn-primary {

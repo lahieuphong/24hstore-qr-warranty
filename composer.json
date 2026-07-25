@@ -49,6 +49,7 @@
     "dev": [
       "Composer\\Config::disableProcessTimeout",
       "@php artisan config:clear --env=development --ansi",
+      "@php artisan migrate --seed --force --env=development",
       "yarn run concurrently -c \"#93c5fd,#c4b5fd,#fb7185\" \"php artisan serve --env=development\" \"php artisan queue:listen --env=development --tries=1 --timeout=0\" \"yarn dev\" --names=server,queue,vite --kill-others"
     ],
     "test": [

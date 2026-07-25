@@ -31,6 +31,9 @@ Route::get('/login', [AuthenticatedSessionController::class, 'legacy'])->name('l
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/admin/login/', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::get('/admin/login/csrf', [AuthenticatedSessionController::class, 'csrf'])
+        ->middleware('throttle:30,1')
+        ->name('login.csrf');
     Route::post('/admin/login/', [AuthenticatedSessionController::class, 'store'])
         ->middleware('throttle:10,1')
         ->name('login.store');
@@ -41,6 +44,11 @@ Route::get('/bao-hanh/{product:qr_token}', WarrantyLookupController::class)
     ->name('warranty.legacy');
 
 Route::middleware(['auth', 'active'])->group(function (): void {
+    Route::get('/login/success', [AuthenticatedSessionController::class, 'success'])
+        ->name('login.success');
+    Route::get('/login/success/complete', [AuthenticatedSessionController::class, 'complete'])
+        ->name('login.success.complete');
+
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::prefix('admin')->name('admin.')->group(function (): void {

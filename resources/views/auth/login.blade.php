@@ -22,23 +22,39 @@
             </div>
 
             <div class="rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+                @if (request()->boolean('expired'))
+                    <div role="alert" class="mb-5 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
+                        <x-lucide-refresh-cw class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                        <div>
+                            <p class="text-sm font-semibold">Phiên đăng nhập đã hết hạn.</p>
+                            <p class="mt-1 text-xs text-amber-800">Trang đã được làm mới. Vui lòng đăng nhập lại.</p>
+                        </div>
+                    </div>
+                @endif
+
                 @if ($errors->any())
                     <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                         {{ $errors->first() }}
                     </div>
                 @endif
 
-                <form method="POST" class="space-y-5">
+                <form
+                    method="POST"
+                    action="{{ route('login.store') }}"
+                    class="space-y-5"
+                    data-login-form
+                    data-csrf-url="{{ route('login.csrf') }}"
+                >
                     @csrf
                     <input type="hidden" name="next" value="{{ $next }}">
                     <div>
                         <label for="email" class="form-label">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-input" placeholder="admin@gmail.com">
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-input" placeholder="Nhập email...">
                     </div>
                     <div>
                         <label for="password" class="form-label">Mật khẩu</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" required autocomplete="current-password" class="form-input form-input-trailing-icon login-password-input" placeholder="********">
+                            <input id="password" name="password" type="password" required autocomplete="current-password" class="form-input form-input-trailing-icon login-password-input" placeholder="Nhập mật khẩu...">
                             <button
                                 type="button"
                                 data-password-toggle
@@ -54,10 +70,17 @@
                         </div>
                     </div>
                     <label class="flex cursor-pointer items-center gap-3 text-sm text-slate-600">
-                        <input name="remember" type="checkbox" value="1" class="login-checkbox">
+                        <input name="remember" type="checkbox" value="1" class="login-checkbox" @checked(old('remember'))>
                         Ghi nhớ đăng nhập trên thiết bị này
                     </label>
-                    <button type="submit" class="btn-primary w-full py-3">Đăng nhập</button>
+                    <button type="submit" class="btn-primary w-full py-3" data-login-submit>
+                        <span data-login-idle>Đăng nhập</span>
+                        <span data-login-loading class="hidden items-center gap-2">
+                            <x-lucide-loader-circle class="size-4 motion-safe:animate-spin" aria-hidden="true" />
+                            Đang xác thực...
+                        </span>
+                    </button>
+                    <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-login-status></p>
                 </form>
             </div>
 

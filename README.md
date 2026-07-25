@@ -34,6 +34,11 @@ Trên Windows:
 start-app.bat
 ```
 
+Mỗi lần khởi động nhanh, ứng dụng tự chạy migration và đồng bộ tài khoản quản trị
+từ `ADMIN_EMAIL`/`ADMIN_PASSWORD` trong `.env.development`. Sau khi đổi hai giá trị
+này, dừng tiến trình hiện tại bằng `Ctrl+C` rồi chạy lại `./start-app` (hoặc
+`start-app.bat`); thông tin cũ sẽ không còn đăng nhập được.
+
 Mở `http://127.0.0.1:8000/admin` để quản trị hoặc `http://127.0.0.1:8000/check` để tra cứu IMEI. QR dùng URL `/check/{qr_token}` trên cùng ứng dụng.
 
 Khi chạy một lệnh Artisan thủ công ở local, thêm `--env=development` để Laravel

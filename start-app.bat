@@ -40,6 +40,20 @@ if errorlevel 1 (
     exit /b 1
 )
 
+php artisan migrate --force --env=development --quiet
+if errorlevel 1 (
+    echo [ERROR] Unable to migrate the development database.
+    pause
+    exit /b 1
+)
+
+php artisan db:seed --force --env=development --quiet
+if errorlevel 1 (
+    echo [ERROR] Unable to synchronize the administrator credentials.
+    pause
+    exit /b 1
+)
+
 echo Starting the application at http://127.0.0.1:8000
 echo Admin: http://127.0.0.1:8000/admin
 echo Tra cuu: http://127.0.0.1:8000/check

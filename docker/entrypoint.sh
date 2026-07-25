@@ -11,6 +11,9 @@ mkdir -p \
 
 chown -R www-data:www-data bootstrap/cache storage
 
+# Always read the latest Render Environment values before syncing the admin.
+php artisan config:clear
+
 migration_succeeded=false
 
 for attempt in 1 2 3 4 5; do
@@ -28,9 +31,7 @@ if [ "${migration_succeeded}" != "true" ]; then
     exit 1
 fi
 
-if [ "${RUN_DATABASE_SEEDER:-true}" = "true" ]; then
-    php artisan db:seed --force
-fi
+php artisan db:seed --force
 
 php artisan optimize
 

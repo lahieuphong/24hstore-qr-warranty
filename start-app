@@ -26,6 +26,8 @@ if [[ ! -f public/build/manifest.json ]]; then
 fi
 
 php artisan config:clear --env=development --quiet
+php artisan migrate --force --env=development --quiet
+php artisan db:seed --force --env=development --quiet
 
 echo "Ứng dụng: http://127.0.0.1:8000"
 echo "Admin:    http://127.0.0.1:8000/admin"

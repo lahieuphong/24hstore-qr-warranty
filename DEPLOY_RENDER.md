@@ -41,11 +41,21 @@ Sao chép kết quả bắt đầu bằng `base64:` và chỉ lưu trong Render.
 Dùng [deploy/render.env.example](deploy/render.env.example) làm danh sách.
 Các giá trị bắt buộc phải thay:
 
-- `APP_KEY`: kết quả của `php artisan key:generate --show`.
+- `APP_KEY`: tạo một lần bằng `php artisan key:generate --show`, sau đó giữ
+  nguyên giá trị này qua mọi lần deploy.
 - `APP_URL`: URL HTTPS chính xác của Render.
 - `DB_URL`: pooled connection string của Neon.
 - `ADMIN_EMAIL`: email đăng nhập trang quản trị.
 - `ADMIN_PASSWORD`: mật khẩu riêng dài ít nhất 12 ký tự.
+
+File `.env.production` trên máy chỉ là bản tham chiếu và bị loại khỏi Git/Docker
+để không làm lộ bí mật. Sửa file này **không tự cập nhật Render**. Hãy đổi hai
+biến `ADMIN_EMAIL`/`ADMIN_PASSWORD` trong mục **Environment** của Render rồi chọn
+**Save Changes** để service redeploy.
+
+Không tạo lại hoặc xóa `APP_KEY` khi redeploy: thay khóa sẽ làm mất hiệu lực cookie
+phiên/CSRF đang có và người dùng có thể gặp lỗi 419. Giữ `SESSION_DRIVER=database`,
+`SESSION_PATH=/`, `SESSION_SECURE_COOKIE=true` và để `SESSION_DOMAIN=null`.
 
 `ADMIN_PASSWORD` mặc định yếu sẽ khiến production seeder chủ động dừng deploy.
 
@@ -53,10 +63,12 @@ Các giá trị bắt buộc phải thay:
 
 Khi deploy, container tự động:
 
-1. Chạy migration với tối đa 5 lần thử kết nối Neon.
-2. Chạy seeder tạo role và tài khoản quản trị.
-3. Cache cấu hình, route và view.
-4. Khởi động Apache ở cổng `10000`.
+1. Xóa config cache cũ để đọc Environment hiện tại của Render.
+2. Chạy migration với tối đa 5 lần thử kết nối Neon.
+3. Luôn chạy seeder idempotent để đồng bộ role và tài khoản quản trị theo
+   Environment hiện tại.
+4. Cache lại cấu hình, route và view.
+5. Khởi động Apache ở cổng `10000`.
 
 Kiểm tra:
 
@@ -65,8 +77,15 @@ Kiểm tra:
 - `/check`: trang tra cứu công khai.
 - `/admin/login/`: trang đăng nhập quản trị.
 
-Sau lần deploy đầu, có thể đặt `RUN_DATABASE_SEEDER=false`. Migration vẫn chạy
-ở mỗi lần khởi động, còn dữ liệu sản phẩm luôn được giữ trong Neon.
+Mỗi lần thay `ADMIN_EMAIL` hoặc `ADMIN_PASSWORD` và service khởi động lại, cùng
+một tài khoản quản trị trong database sẽ được cập nhật; email/mật khẩu cũ và các
+phiên đăng nhập cũ sẽ mất hiệu lực. Dữ liệu sản phẩm không bị thay đổi.
+
+Khi nâng cấp một database đã có nhiều hơn một `super-admin` lên phiên bản quản lý
+admin theo Environment lần đầu, hãy giữ `ADMIN_EMAIL` trùng với đúng tài khoản
+đang được Render quản lý và deploy một lần để đánh dấu tài khoản đó. Sau lần
+deploy thành công này mới đổi email nếu cần. Seeder sẽ chủ động dừng nếu không thể
+xác định an toàn tài khoản cần cập nhật.
 
 Render Free có thể ngủ sau thời gian không nhận request. Lần mở đầu sau khi ngủ
 sẽ chậm hơn bình thường; đây là giới hạn chấp nhận được đối với bản demo.

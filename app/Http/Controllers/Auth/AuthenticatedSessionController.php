@@ -4,26 +4,38 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Admin\AdminActivityLogger;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
     public function legacy(): RedirectResponse
     {
-        return redirect()->to(url('/admin/login').'/?next=/admin/');
+        return redirect()->to(self::loginUrl());
     }
 
-    public function create(Request $request): View
+    public function create(Request $request): Response
     {
-        return view('auth.login', [
-            'next' => $this->safeNext($request->query('next')),
-        ]);
+        return response()
+            ->view('auth.login', [
+                'next' => self::safeNext($request->query('next')),
+            ])
+            ->withHeaders(self::noStoreHeaders());
+    }
+
+    public function csrf(Request $request): JsonResponse
+    {
+        return response()
+            ->json([
+                'token' => $request->session()->token(),
+            ])
+            ->withHeaders(self::noStoreHeaders());
     }
 
     public function store(Request $request, AdminActivityLogger $activityLogger): RedirectResponse
@@ -67,10 +79,31 @@ class AuthenticatedSessionController extends Controller
         );
 
         $request->session()->forget('url.intended');
-
-        return redirect()->away(
-            rtrim(url('/'), '/').$this->safeNext($request->input('next')),
+        $request->session()->put(
+            'auth.login.redirect_to',
+            self::safeNext($request->input('next')),
         );
+
+        return to_route('login.success', status: 303);
+    }
+
+    public function success(): Response
+    {
+        return response()
+            ->view('auth.login-success', [
+                'continueUrl' => route('login.success.complete'),
+                'redirectDelay' => 2000,
+            ])
+            ->withHeaders(self::noStoreHeaders());
+    }
+
+    public function complete(Request $request): RedirectResponse
+    {
+        $next = self::safeNext(
+            $request->session()->pull('auth.login.redirect_to'),
+        );
+
+        return redirect()->away(rtrim(url('/'), '/').$next);
     }
 
     public function destroy(Request $request, AdminActivityLogger $activityLogger): RedirectResponse
@@ -86,10 +119,21 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->to(url('/admin/login').'/?next=/admin/');
+        return redirect()->to(self::loginUrl());
     }
 
-    private function safeNext(mixed $value): string
+    public static function loginUrl(mixed $next = '/admin/', array $query = []): string
+    {
+        $parameters = [
+            'next' => self::safeNext($next),
+            ...$query,
+        ];
+        $queryString = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
+
+        return url('/admin/login').'/?'.str_replace('%2F', '/', $queryString);
+    }
+
+    public static function safeNext(mixed $value): string
     {
         if (! is_string($value)) {
             return '/admin/';
@@ -141,5 +185,14 @@ class AuthenticatedSessionController extends Controller
         }
 
         return $next;
+    }
+
+    /** @return array<string, string> */
+    private static function noStoreHeaders(): array
+    {
+        return [
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+        ];
     }
 }
