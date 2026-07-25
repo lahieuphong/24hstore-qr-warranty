@@ -27,7 +27,7 @@ class AdminAuthenticationTest extends TestCase
             ->assertSee('class="text-2xl font-black text-rose-950">24hStore QR Warranty</h1>', false)
             ->assertSee('Đăng nhập khu vực quản trị nội bộ')
             ->assertSee('placeholder="********"', false)
-            ->assertSee('class="form-input login-password-input pr-12"', false)
+            ->assertSee('class="form-input form-input-trailing-icon login-password-input"', false)
             ->assertSee('class="login-checkbox"', false)
             ->assertSee('data-password-toggle', false)
             ->assertSee('aria-controls="password"', false)

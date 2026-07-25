@@ -74,8 +74,8 @@
     </section>
 
     @if ($showForm)
-        <div class="fixed inset-0 z-[70] overflow-y-auto bg-slate-950/50 p-4" role="dialog" aria-modal="true">
-            <div class="mx-auto my-8 max-w-2xl rounded-3xl bg-white shadow-2xl">
+        <div class="fixed inset-0 z-[70] grid place-items-center overflow-y-auto bg-slate-950/50 p-4" role="dialog" aria-modal="true">
+            <div class="w-full max-w-2xl rounded-3xl bg-white shadow-2xl">
                 <div class="flex items-start justify-between border-b border-slate-200 px-6 py-5">
                     <div>
                         <h2 class="text-xl font-black text-slate-900">{{ $editingId ? 'Cập nhật người dùng' : 'Thêm người dùng' }}</h2>
@@ -100,11 +100,14 @@
                         </div>
                         <div>
                             <label for="user-role" class="form-label">Vai trò <span class="text-rose-600">*</span></label>
-                            <select id="user-role" wire:model="role" class="form-input">
-                                @foreach ($roles as $roleName)
-                                    <option value="{{ $roleName }}">{{ $roleName }}</option>
-                                @endforeach
-                            </select>
+                            <x-admin-select
+                                id="user-role"
+                                label="Vai trò"
+                                model="role"
+                                :value="$role"
+                                :options="$roles"
+                                :live="false"
+                            />
                             @error('role') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div class="flex items-end pb-2">

@@ -38,7 +38,7 @@
                     <div>
                         <label for="password" class="form-label">Mật khẩu</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" required autocomplete="current-password" class="form-input login-password-input pr-12" placeholder="********">
+                            <input id="password" name="password" type="password" required autocomplete="current-password" class="form-input form-input-trailing-icon login-password-input" placeholder="********">
                             <button
                                 type="button"
                                 data-password-toggle

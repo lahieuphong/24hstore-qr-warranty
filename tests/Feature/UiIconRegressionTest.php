@@ -56,6 +56,35 @@ class UiIconRegressionTest extends TestCase
         $this->assertSame([], $violations, "Application Blade icon regressions:\n".implode("\n", $violations));
     }
 
+    public function test_application_views_do_not_use_native_select_controls(): void
+    {
+        $violations = [];
+
+        foreach ($this->uiSourceFiles() as $path => $source) {
+            if (! str_ends_with($path, '.blade.php')) {
+                continue;
+            }
+
+            if (preg_match('/<\s*select\b/i', $source) === 1) {
+                $violations[] = $path;
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $violations,
+            "Native select controls found in application views:\n".implode("\n", $violations),
+        );
+    }
+
+    public function test_custom_dropdown_uses_one_entangled_value_path(): void
+    {
+        $source = File::get(resource_path('views/components/admin-select.blade.php'));
+
+        $this->assertStringContainsString('selected: $wire.$entangle', $source);
+        $this->assertStringNotContainsString('$wire.$set(', $source);
+    }
+
     /** @return array<string, string> */
     private function uiSourceFiles(): array
     {

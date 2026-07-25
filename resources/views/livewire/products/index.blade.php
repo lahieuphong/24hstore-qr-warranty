@@ -32,22 +32,29 @@
                 >
             </div>
             <div class="md:col-span-3">
-                <label for="product-status" class="sr-only">Trạng thái</label>
-                <select id="product-status" wire:model.live="status" class="form-input">
-                    <option value="">Tất cả trạng thái</option>
-                    @foreach ($statuses as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
-                    @endforeach
-                </select>
+                <x-admin-select
+                    id="product-status"
+                    label="Trạng thái"
+                    model="status"
+                    :value="$status"
+                    :live="true"
+                    :options="array_merge(['' => 'Tất cả trạng thái'], $statuses)"
+                />
             </div>
             <div class="md:col-span-3">
-                <label for="product-per-page" class="sr-only">Số dòng</label>
-                <select id="product-per-page" wire:model.live="perPage" class="form-input">
-                    <option value="10">10 dòng / trang</option>
-                    <option value="20">20 dòng / trang</option>
-                    <option value="50">50 dòng / trang</option>
-                    <option value="100">100 dòng / trang</option>
-                </select>
+                <x-admin-select
+                    id="product-per-page"
+                    label="Số dòng"
+                    model="perPage"
+                    :value="$perPage"
+                    :live="true"
+                    :options="[
+                        10 => '10 dòng / trang',
+                        20 => '20 dòng / trang',
+                        50 => '50 dòng / trang',
+                        100 => '100 dòng / trang',
+                    ]"
+                />
             </div>
         </div>
     </section>
@@ -281,11 +288,14 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label for="warranty-status" class="form-label">Trạng thái bảo hành <span class="text-rose-600">*</span></label>
-                            <select id="warranty-status" wire:model="warranty_status" class="form-input">
-                                @foreach ($statuses as $value => $label)
-                                    <option value="{{ $value }}">{{ $label }}</option>
-                                @endforeach
-                            </select>
+                            <x-admin-select
+                                id="warranty-status"
+                                label="Trạng thái bảo hành"
+                                model="warranty_status"
+                                :value="$warranty_status"
+                                :options="$statuses"
+                                :live="false"
+                            />
                             @error('warranty_status') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div class="sm:col-span-2">

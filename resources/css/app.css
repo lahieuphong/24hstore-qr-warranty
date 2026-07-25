@@ -68,6 +68,31 @@ body {
     @apply block min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:border-rose-600 focus:ring-2 focus:ring-rose-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500;
 }
 
+.form-input-leading-icon {
+    padding-inline-start: 2.5rem;
+}
+
+.form-input-trailing-icon {
+    padding-inline-end: 3rem;
+}
+
+.admin-select {
+    @apply relative;
+}
+
+.admin-select-trigger {
+    @apply flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 rounded-md border border-slate-300 bg-white px-3 py-2 text-left text-sm text-slate-700 shadow-sm outline-none transition hover:border-rose-300 hover:bg-rose-50/40 focus-visible:border-rose-600 focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-wait disabled:bg-slate-100 disabled:text-slate-500;
+}
+
+.admin-select-menu {
+    @apply absolute left-0 z-50 max-h-72 w-full overflow-y-auto rounded-lg border bg-white p-1.5 shadow-xl shadow-slate-900/15;
+    border-color: var(--admin-border);
+}
+
+.admin-select-option {
+    @apply flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm text-slate-700 outline-none transition hover:bg-rose-50 hover:text-rose-900 focus-visible:bg-rose-50 focus-visible:text-rose-900 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-rose-300;
+}
+
 .form-label {
     @apply mb-1.5 block text-sm font-semibold text-slate-700;
 }
