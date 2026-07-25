@@ -445,6 +445,46 @@ class AdminAuthenticationTest extends TestCase
         $this->assertStringNotContainsString('RUN_DATABASE_SEEDER', $script);
     }
 
+    public function test_logout_invalidates_the_session_before_showing_the_success_transition(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('logout'));
+
+        $response
+            ->assertStatus(303)
+            ->assertRedirect(route('logout.success'));
+        $this->assertGuest();
+        $this->assertDatabaseHas('admin_activity_logs', [
+            'user_id' => $user->id,
+            'action' => 'auth.logout',
+            'description' => 'Đăng xuất khỏi trang quản trị.',
+        ]);
+
+        $this->get(route('logout.success'))
+            ->assertOk()
+            ->assertHeader('Pragma', 'no-cache')
+            ->assertSee('<title>Đăng xuất thành công | 24hStore Administration</title>', false)
+            ->assertSee('Đăng xuất thành công')
+            ->assertSee('data-auth-transition', false)
+            ->assertSee('data-logout-success', false)
+            ->assertSee('data-continue-url="'.AuthenticatedSessionController::loginUrl().'"', false)
+            ->assertSee('Về trang đăng nhập')
+            ->assertDontSee('<meta http-equiv="refresh"', false);
+
+        $this->get('/admin/')
+            ->assertRedirect(AuthenticatedSessionController::loginUrl());
+    }
+
+    public function test_authenticated_user_cannot_open_the_logout_success_transition_directly(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('logout.success'))
+            ->assertRedirect(url('/admin').'/');
+    }
+
     public function test_authenticated_user_cannot_return_to_the_admin_login_page(): void
     {
         $user = User::factory()->create();

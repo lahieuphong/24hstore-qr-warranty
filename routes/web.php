@@ -37,6 +37,8 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/admin/login/', [AuthenticatedSessionController::class, 'store'])
         ->middleware('throttle:10,1')
         ->name('login.store');
+    Route::get('/admin/logout/success', [AuthenticatedSessionController::class, 'logoutSuccess'])
+        ->name('logout.success');
 });
 
 Route::get('/bao-hanh/{product:qr_token}', WarrantyLookupController::class)

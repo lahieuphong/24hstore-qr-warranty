@@ -125,18 +125,18 @@ body {
     accent-color: var(--admin-link-hover);
 }
 
-.login-success-progress {
+.auth-transition-progress {
     transform-origin: left center;
-    animation: login-success-progress 2s ease-out both;
+    animation: auth-transition-progress 2s ease-out both;
 }
 
-@keyframes login-success-progress {
+@keyframes auth-transition-progress {
     from { transform: scaleX(0); }
     to { transform: scaleX(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .login-success-progress {
+    .auth-transition-progress {
         animation: none;
     }
 }

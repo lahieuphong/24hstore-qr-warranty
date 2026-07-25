@@ -106,6 +106,16 @@ class AuthenticatedSessionController extends Controller
         return redirect()->away(rtrim(url('/'), '/').$next);
     }
 
+    public function logoutSuccess(): Response
+    {
+        return response()
+            ->view('auth.logout-success', [
+                'continueUrl' => self::loginUrl(),
+                'redirectDelay' => 2000,
+            ])
+            ->withHeaders(self::noStoreHeaders());
+    }
+
     public function destroy(Request $request, AdminActivityLogger $activityLogger): RedirectResponse
     {
         $user = $request->user();
@@ -119,7 +129,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->to(self::loginUrl());
+        return to_route('logout.success', status: 303);
     }
 
     public static function loginUrl(mixed $next = '/admin/', array $query = []): string

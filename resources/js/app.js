@@ -109,15 +109,51 @@ document.querySelectorAll('[data-login-form]').forEach((form) => {
     });
 });
 
-const loginSuccess = document.querySelector('[data-login-success]');
+document.querySelectorAll('[data-logout-form]').forEach((form) => {
+    if (!(form instanceof HTMLFormElement)) {
+        return;
+    }
 
-if (loginSuccess instanceof HTMLElement) {
-    const continueUrl = loginSuccess.dataset.continueUrl;
-    const parsedDelay = Number.parseInt(loginSuccess.dataset.redirectDelay ?? '', 10);
+    const submitButton = form.querySelector('[data-logout-submit]');
+    const idleLabel = form.querySelector('[data-logout-idle]');
+    const loadingLabel = form.querySelector('[data-logout-loading]');
+    const statusRegion = form.querySelector('[data-logout-status]');
+    let submitting = false;
+
+    form.addEventListener('submit', (event) => {
+        if (submitting) {
+            event.preventDefault();
+            return;
+        }
+
+        submitting = true;
+
+        if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = true;
+            submitButton.setAttribute('aria-busy', 'true');
+        }
+
+        idleLabel?.classList.add('hidden');
+        loadingLabel?.classList.remove('hidden');
+        loadingLabel?.classList.add('inline-flex');
+
+        if (statusRegion instanceof HTMLElement) {
+            statusRegion.textContent = 'Đang đăng xuất...';
+        }
+    });
+});
+
+document.querySelectorAll('[data-auth-transition]').forEach((transition) => {
+    if (!(transition instanceof HTMLElement)) {
+        return;
+    }
+
+    const continueUrl = transition.dataset.continueUrl;
+    const parsedDelay = Number.parseInt(transition.dataset.redirectDelay ?? '', 10);
     const redirectDelay = Number.isFinite(parsedDelay) ? parsedDelay : 2000;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (continueUrl && !prefersReducedMotion) {
         window.setTimeout(() => window.location.replace(continueUrl), redirectDelay);
     }
-}
+});

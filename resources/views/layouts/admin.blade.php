@@ -49,9 +49,16 @@
                 <span class="text-white/40">/</span>
                 <a href="{{ route('admin.profile') }}" class="django-utility-link">Đổi mật khẩu</a>
                 <span class="text-white/40">/</span>
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" data-logout-form>
                     @csrf
-                    <button type="submit" class="django-utility-link uppercase tracking-wide">Đăng xuất</button>
+                    <button type="submit" class="django-utility-link uppercase tracking-wide disabled:cursor-wait disabled:opacity-80" data-logout-submit>
+                        <span data-logout-idle>Đăng xuất</span>
+                        <span data-logout-loading class="hidden items-center gap-1.5">
+                            <x-lucide-loader-circle class="size-3.5 motion-safe:animate-spin" aria-hidden="true" />
+                            Đang đăng xuất...
+                        </span>
+                    </button>
+                    <span class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-logout-status></span>
                 </form>
             </div>
         </div>
@@ -80,9 +87,16 @@
                     <a href="{{ route('admin.activity.index') }}" class="django-mobile-nav-link">Hoạt động quản trị</a>
                 @endcan
                 <a href="{{ route('admin.profile') }}" class="django-mobile-nav-link">Hồ sơ / Đổi mật khẩu</a>
-                <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-white/15 pt-2">
+                <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-white/15 pt-2" data-logout-form>
                     @csrf
-                    <button type="submit" class="django-mobile-nav-link w-full text-left">Đăng xuất</button>
+                    <button type="submit" class="django-mobile-nav-link w-full text-left disabled:cursor-wait disabled:opacity-80" data-logout-submit>
+                        <span data-logout-idle>Đăng xuất</span>
+                        <span data-logout-loading class="hidden items-center gap-2">
+                            <x-lucide-loader-circle class="size-4 motion-safe:animate-spin" aria-hidden="true" />
+                            Đang đăng xuất...
+                        </span>
+                    </button>
+                    <span class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-logout-status></span>
                 </form>
             </nav>
         </div>

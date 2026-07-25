@@ -33,7 +33,11 @@ class AdminChromeTest extends TestCase
             ->assertDontSee('Xem trang tra cứu')
             ->assertDontSee('Mở trang tra cứu')
             ->assertSee('Đổi mật khẩu')
-            ->assertSee('Đăng xuất');
+            ->assertSee('Đăng xuất')
+            ->assertSee('data-logout-form', false)
+            ->assertSee('data-logout-submit', false)
+            ->assertSee('data-logout-loading', false)
+            ->assertSee('Đang đăng xuất...');
     }
 
     public function test_admin_favicon_asset_exists(): void
