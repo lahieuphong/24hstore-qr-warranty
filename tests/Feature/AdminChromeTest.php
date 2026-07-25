@@ -30,7 +30,8 @@ class AdminChromeTest extends TestCase
             ->assertSee('Bảo hành &amp; kho', false)
             ->assertSee('Sản phẩm &amp; QR', false)
             ->assertSee('laravel-logo.svg')
-            ->assertSee('Xem trang tra cứu')
+            ->assertDontSee('Xem trang tra cứu')
+            ->assertDontSee('Mở trang tra cứu')
             ->assertSee('Đổi mật khẩu')
             ->assertSee('Đăng xuất');
     }

@@ -8,12 +8,6 @@
             <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">Chọn một chức năng bên dưới để xem, thêm hoặc thay đổi dữ liệu bảo hành.</p>
         </div>
         <div class="flex flex-wrap gap-2">
-            @can('products.create')
-                <a href="{{ route('admin.products.index', ['action' => 'create']) }}" class="btn-primary">
-                    <x-lucide-plus class="size-4" aria-hidden="true" />
-                    Thêm sản phẩm
-                </a>
-            @endcan
             <a href="{{ route('warranty.check') }}" target="_blank" rel="noopener" class="btn-secondary">
                 Xem trang tra cứu
                 <x-lucide-external-link class="size-4" aria-hidden="true" />
