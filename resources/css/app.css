@@ -447,6 +447,12 @@ body {
     background: #fff1f2;
 }
 
+.django-admin-shell table tbody tr.template-preview-data-row:hover,
+.django-admin-shell table tbody tr.template-preview-data-row:hover > th,
+.django-admin-shell table tbody tr.template-preview-data-row:hover > td {
+    background: #f8fafc;
+}
+
 .django-admin-shell [role='dialog'] > div {
     max-height: calc(100dvh - 2rem);
     overflow-y: auto;

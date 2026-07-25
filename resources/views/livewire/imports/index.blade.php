@@ -14,7 +14,7 @@
             type="button"
             wire:click="openTemplatePreview"
             x-ref="templatePreviewTrigger"
-            class="btn-excel"
+            class="btn-excel-soft"
             aria-haspopup="dialog"
             aria-controls="template-preview-dialog"
             aria-expanded="{{ $showTemplatePreview ? 'true' : 'false' }}"
@@ -226,7 +226,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($templateRows as $rowIndex => $row)
-                                        <tr class="bg-white text-slate-700">
+                                        <tr class="template-preview-data-row bg-white text-slate-700">
                                             <th scope="row" class="border-b border-r border-[#cbd8d0] bg-[#f3f8f5] px-2 py-3 text-center font-bold text-[#688071]">{{ $rowIndex + 2 }}</th>
                                             @foreach ($row as $cellIndex => $cell)
                                                 <td class="border-b border-r border-[#cbd8d0] px-3 py-3 last:border-r-0 {{ $cellIndex === 2 ? 'font-mono font-semibold text-slate-900' : '' }}">{{ $cell }}</td>
