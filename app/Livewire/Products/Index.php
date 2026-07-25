@@ -42,6 +42,8 @@ class Index extends Component
 
     public bool $showDownloadModal = false;
 
+    public bool $showBulkDownloadModal = false;
+
     public ?int $editingId = null;
 
     public ?int $deletingId = null;
@@ -49,6 +51,9 @@ class Index extends Component
     public ?int $qrProductId = null;
 
     public ?int $downloadProductId = null;
+
+    /** @var array<int, int> */
+    public array $bulkDownloadIds = [];
 
     public string $product_code = '';
 
@@ -78,13 +83,13 @@ class Index extends Component
     public function updatedSearch(): void
     {
         $this->resetPage();
-        $this->selected = [];
+        $this->clearSelection();
     }
 
     public function updatedStatus(): void
     {
         $this->resetPage();
-        $this->selected = [];
+        $this->clearSelection();
     }
 
     public function updatedPerPage(): void
@@ -94,7 +99,7 @@ class Index extends Component
         }
 
         $this->resetPage();
-        $this->selected = [];
+        $this->clearSelection();
     }
 
     public function sortBy(string $field): void
@@ -254,6 +259,36 @@ class Index extends Component
         $this->downloadProductId = null;
     }
 
+    public function confirmBulkDownload(): void
+    {
+        $this->authorize('products.print');
+
+        $ids = collect($this->selected)
+            ->filter(fn ($id): bool => ctype_digit((string) $id) && (int) $id > 0)
+            ->map(fn ($id): int => (int) $id)
+            ->unique()
+            ->take(500)
+            ->values()
+            ->all();
+
+        abort_if($ids === [], 422, 'Chưa chọn sản phẩm để in tem.');
+
+        $this->bulkDownloadIds = $ids;
+        $this->showBulkDownloadModal = true;
+    }
+
+    public function closeBulkDownload(): void
+    {
+        $wasOpen = $this->showBulkDownloadModal;
+
+        $this->showBulkDownloadModal = false;
+        $this->bulkDownloadIds = [];
+
+        if ($wasOpen) {
+            $this->dispatch('bulk-download-closed');
+        }
+    }
+
     public function selectCurrentPage(): void
     {
         $ids = $this->productsQuery()
@@ -272,6 +307,7 @@ class Index extends Component
     public function clearSelection(): void
     {
         $this->selected = [];
+        $this->closeBulkDownload();
     }
 
     public function render(): View

@@ -1,4 +1,8 @@
-<div class="space-y-6">
+<div
+    class="space-y-6"
+    x-data
+    x-on:bulk-download-closed.window="$nextTick(() => $refs.bulkDownloadTrigger && $refs.bulkDownloadTrigger.focus())"
+>
     <x-flash />
     <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
@@ -71,14 +75,20 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <button type="button" wire:click="clearSelection" class="btn-secondary">Bỏ chọn</button>
                     @can('products.print')
-                        <a
-                            href="{{ route('admin.labels.bulk', ['ids' => implode(',', $selected)]) }}"
-                            target="_blank"
-                            rel="noopener"
+                        <button
+                            type="button"
+                            wire:click="confirmBulkDownload"
+                            wire:loading.attr="disabled"
+                            wire:target="confirmBulkDownload"
+                            x-ref="bulkDownloadTrigger"
                             class="btn-primary"
+                            aria-haspopup="dialog"
+                            aria-controls="bulk-download-pdf-dialog"
+                            aria-expanded="{{ $showBulkDownloadModal ? 'true' : 'false' }}"
                         >
+                            <x-lucide-file-down class="size-4" aria-hidden="true" />
                             Xuất tem PDF
-                        </a>
+                        </button>
                     @endcan
                 </div>
             @else
@@ -418,6 +428,72 @@
                     <a
                         href="{{ route('admin.products.label', $downloadProduct) }}"
                         x-on:click="$wire.closeDownload()"
+                        class="btn-primary"
+                    >
+                        <x-lucide-download class="size-4" aria-hidden="true" />
+                        Tải về máy
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($showBulkDownloadModal && count($bulkDownloadIds) > 0)
+        <div
+            id="bulk-download-pdf-dialog"
+            class="fixed inset-0 z-[80] grid place-items-center overflow-y-auto bg-slate-950/50 p-4 sm:p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bulk-download-pdf-title"
+            aria-describedby="bulk-download-pdf-description"
+            wire:key="bulk-download-pdf-modal"
+            x-data
+            x-init="$nextTick(() => $refs.closeBulkDownload.focus())"
+            x-trap.inert.noscroll="true"
+            x-on:keydown.escape.window="$wire.closeBulkDownload()"
+            x-on:click.self="$wire.closeBulkDownload()"
+        >
+            <div class="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:max-h-[calc(100dvh-3rem)]">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-700">
+                        <x-lucide-files class="size-6" aria-hidden="true" />
+                    </div>
+                    <button
+                        type="button"
+                        wire:click="closeBulkDownload"
+                        x-ref="closeBulkDownload"
+                        class="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+                        aria-label="Đóng xác nhận xuất tem PDF"
+                    >
+                        <x-lucide-x class="size-5" aria-hidden="true" />
+                    </button>
+                </div>
+
+                <h2 id="bulk-download-pdf-title" class="mt-5 text-xl font-black text-slate-900">Xác nhận tải tem PDF?</h2>
+                <p id="bulk-download-pdf-description" class="mt-3 text-sm leading-6 text-slate-600">
+                    Bạn có muốn xuất tệp PDF chứa
+                    <span class="font-bold text-slate-900">{{ number_format(count($bulkDownloadIds)) }} tem đã chọn</span>
+                    và tải về máy không?
+                </p>
+
+                <div class="mt-4 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-rose-700">Sản phẩm đã chọn</p>
+                    <p class="mt-1 text-lg font-black text-slate-900">{{ number_format(count($bulkDownloadIds)) }} sản phẩm</p>
+                    <p class="mt-1 text-xs leading-5 text-slate-600">Tem QR sẽ được sắp xếp trên khổ A4, tối đa 35 tem mỗi trang.</p>
+                </div>
+
+                <p class="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-500">
+                    <x-lucide-download class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                    Một tệp PDF chứa toàn bộ tem đã chọn sẽ được tải xuống thiết bị đang sử dụng.
+                </p>
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" wire:click="closeBulkDownload" class="btn-secondary">Hủy</button>
+                    <a
+                        href="{{ route('admin.labels.bulk', ['ids' => implode(',', $bulkDownloadIds)]) }}"
+                        target="_blank"
+                        rel="noopener"
+                        x-on:click="$wire.closeBulkDownload()"
                         class="btn-primary"
                     >
                         <x-lucide-download class="size-4" aria-hidden="true" />

@@ -296,6 +296,50 @@ class AdminChromeTest extends TestCase
             ->assertSet('selected', []);
     }
 
+    public function test_bulk_pdf_export_requires_confirmation_before_download(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+        $products = Product::factory()->count(2)->create();
+        $ids = $products->pluck('id')->all();
+
+        $this->actingAs($user);
+
+        Livewire::test(ProductIndex::class)
+            ->set('selected', [$ids[0], (string) $ids[1]])
+            ->assertSet('showBulkDownloadModal', false)
+            ->assertDontSee('Bạn có muốn xuất tệp PDF chứa')
+            ->call('confirmBulkDownload')
+            ->assertSet('showBulkDownloadModal', true)
+            ->assertSet('bulkDownloadIds', $ids)
+            ->assertSee('Xác nhận tải tem PDF?')
+            ->assertSee('Bạn có muốn xuất tệp PDF chứa')
+            ->assertSee('2 tem đã chọn')
+            ->assertSee('2 sản phẩm')
+            ->assertSee('tối đa 35 tem mỗi trang')
+            ->assertSee('Tải về máy')
+            ->assertSee('x-trap.inert.noscroll="true"', false)
+            ->assertSee('x-init="$nextTick(() => $refs.closeBulkDownload.focus())"', false)
+            ->call('closeBulkDownload')
+            ->assertSet('showBulkDownloadModal', false)
+            ->assertSet('bulkDownloadIds', [])
+            ->assertSet('selected', [$ids[0], (string) $ids[1]])
+            ->call('confirmBulkDownload')
+            ->call('clearSelection')
+            ->assertSet('showBulkDownloadModal', false)
+            ->assertSet('bulkDownloadIds', [])
+            ->assertSet('selected', []);
+
+        Livewire::test(ProductIndex::class)
+            ->set('selected', $ids)
+            ->call('confirmBulkDownload')
+            ->set('search', 'updated search')
+            ->assertSet('showBulkDownloadModal', false)
+            ->assertSet('bulkDownloadIds', [])
+            ->assertSet('selected', []);
+    }
+
     public function test_user_table_uses_the_same_created_time_format(): void
     {
         $this->seed(RolePermissionSeeder::class);
