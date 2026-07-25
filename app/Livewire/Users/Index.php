@@ -64,6 +64,7 @@ class Index extends Component
     {
         $this->authorize('users.manage');
         $user = User::query()->findOrFail($id);
+        $this->ensureEnvironmentAdminIsEditable($user);
 
         $this->editingId = $user->id;
         $this->name = $user->name;
@@ -81,6 +82,11 @@ class Index extends Component
         $this->authorize('users.manage');
         $wasEditing = $this->editingId !== null;
         $user = $this->editingId ? User::query()->findOrFail($this->editingId) : new User;
+
+        if ($user->exists) {
+            $this->ensureEnvironmentAdminIsEditable($user);
+        }
+
         $this->name = trim($this->name);
         $this->email = Str::lower(trim($this->email));
 
@@ -192,6 +198,14 @@ class Index extends Component
             ->where('id', '!=', $excluded->id)
             ->whereHas('roles', fn ($query) => $query->where('name', 'super-admin'))
             ->exists();
+    }
+
+    private function ensureEnvironmentAdminIsEditable(User $user): void
+    {
+        abort_if(
+            $user->is_environment_admin && ! config('admin.environment_admin_editable', false),
+            403,
+        );
     }
 
     private function resetForm(): void

@@ -378,6 +378,10 @@ body {
     @apply border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-800;
 }
 
+.admin-icon-action-success {
+    @apply border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800;
+}
+
 .django-module {
     @apply overflow-hidden rounded-md border bg-white shadow-sm;
     border-color: var(--admin-border);

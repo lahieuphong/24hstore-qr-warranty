@@ -36,6 +36,7 @@ class Profile extends Component
     {
         /** @var User $user */
         $user = Auth::user();
+        $this->ensureEnvironmentAdminIsEditable($user);
         $this->name = trim($this->name);
         $this->email = Str::lower(trim($this->email));
 
@@ -57,6 +58,7 @@ class Profile extends Component
     {
         /** @var User $user */
         $user = Auth::user();
+        $this->ensureEnvironmentAdminIsEditable($user);
 
         $validated = $this->validate([
             'current_password' => ['required', 'current_password'],
@@ -77,6 +79,22 @@ class Profile extends Component
 
     public function render(): View
     {
-        return view('livewire.profile');
+        /** @var User $user */
+        $user = Auth::user();
+
+        return view('livewire.profile', [
+            'environmentAdminLocked' => $this->environmentAdminIsLocked($user),
+        ]);
+    }
+
+    private function ensureEnvironmentAdminIsEditable(User $user): void
+    {
+        abort_if($this->environmentAdminIsLocked($user), 403);
+    }
+
+    private function environmentAdminIsLocked(User $user): bool
+    {
+        return $user->is_environment_admin
+            && ! config('admin.environment_admin_editable', false);
     }
 }

@@ -47,6 +47,8 @@ Các giá trị bắt buộc phải thay:
 - `DB_URL`: pooled connection string của Neon.
 - `ADMIN_EMAIL`: email đăng nhập trang quản trị.
 - `ADMIN_PASSWORD`: mật khẩu riêng dài ít nhất 12 ký tự.
+- `ADMIN_ENVIRONMENT_ADMIN_EDITABLE`: giữ `false` trên production để ẩn và
+  chặn chức năng sửa tài khoản quản trị được đồng bộ từ Environment.
 
 File `.env.production` trên máy chỉ là bản tham chiếu và bị loại khỏi Git/Docker
 để không làm lộ bí mật. Sửa file này **không tự cập nhật Render**. Hãy đổi hai
@@ -58,6 +60,14 @@ phiên/CSRF đang có và người dùng có thể gặp lỗi 419. Giữ `SESSI
 `SESSION_PATH=/`, `SESSION_SECURE_COOKIE=true` và để `SESSION_DOMAIN=null`.
 
 `ADMIN_PASSWORD` mặc định yếu sẽ khiến production seeder chủ động dừng deploy.
+Muốn tạm cho phép sửa tài khoản quản trị trong giao diện, đổi
+`ADMIN_ENVIRONMENT_ADMIN_EDITABLE=true` rồi redeploy. Các giá trị do giao diện
+sửa sẽ được đồng bộ lại từ `ADMIN_NAME`/`ADMIN_EMAIL`/`ADMIN_PASSWORD`
+ở lần khởi động tiếp theo.
+
+Cờ này chỉ khóa thông tin định danh, vai trò và mật khẩu được quản lý từ
+Environment. Một super-admin khác vẫn có thể tạm khóa hoặc mở khóa tài khoản;
+seeder sẽ kích hoạt lại tài khoản Environment ở lần khởi động tiếp theo.
 
 ## 5. Deploy và kiểm tra
 

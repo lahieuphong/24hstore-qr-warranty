@@ -103,7 +103,7 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50 text-left text-xs font-bold tracking-wider text-slate-500">
+                <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
                     <tr>
                         <th class="w-12 px-4 py-3"><span class="sr-only">Chọn</span></th>
                         <th
@@ -176,7 +176,7 @@
                                 @endif
                             </button>
                         </th>
-                        <th class="min-w-56 px-4 py-3 text-center">Thao tác</th>
+                        <th class="min-w-56 px-4 py-3">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -218,7 +218,7 @@
                                 {{ $product->created_at?->format('d/m/Y H:i') ?? 'Không có' }}
                             </td>
                             <td class="px-4 py-4">
-                                <div class="flex flex-wrap justify-end gap-2">
+                                <div class="flex flex-wrap justify-start gap-2">
                                     <button type="button" wire:click="showQr({{ $product->id }})" class="admin-icon-action" aria-label="Xem QR" title="Xem QR">
                                         <x-lucide-qr-code class="size-4" aria-hidden="true" />
                                     </button>

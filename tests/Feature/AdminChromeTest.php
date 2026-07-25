@@ -6,6 +6,7 @@ use App\Exports\ProductsTemplateExport;
 use App\Livewire\ActivityLogs\Index as ActivityLogIndex;
 use App\Livewire\Imports\Index as ImportIndex;
 use App\Livewire\Products\Index as ProductIndex;
+use App\Livewire\Users\Index as UserIndex;
 use App\Models\AdminActivityLog;
 use App\Models\Product;
 use App\Models\User;
@@ -356,6 +357,91 @@ class AdminChromeTest extends TestCase
             ->assertSee('Thời gian')
             ->assertDontSee('Ngày tạo')
             ->assertSee('18/07/2026 18:59');
+    }
+
+    public function test_user_actions_use_accessible_lucide_icons_and_align_left(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $admin = User::factory()->create(['name' => 'Admin kiểm thử']);
+        $admin->assignRole('super-admin');
+        $activeUser = User::factory()->create([
+            'name' => 'Nhân viên đang mở',
+            'is_active' => true,
+        ]);
+        $inactiveUser = User::factory()->create([
+            'name' => 'Nhân viên đang khóa',
+            'is_active' => false,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertSee('bg-slate-50 text-left text-xs font-bold uppercase tracking-wider', false)
+            ->assertSee('<th class="px-5 py-3">Thao tác</th>', false)
+            ->assertSee('class="flex justify-start gap-2"', false)
+            ->assertSee('wire:click="edit('.$activeUser->id.')"', false)
+            ->assertSee('aria-label="Sửa tài khoản Nhân viên đang mở"', false)
+            ->assertSee('wire:click="toggleActive('.$activeUser->id.')"', false)
+            ->assertSee('aria-label="Khóa tài khoản Nhân viên đang mở"', false)
+            ->assertSee('admin-icon-action-danger', false)
+            ->assertSee('wire:click="toggleActive('.$inactiveUser->id.')"', false)
+            ->assertSee('aria-label="Mở khóa tài khoản Nhân viên đang khóa"', false)
+            ->assertSee('admin-icon-action-success', false)
+            ->assertDontSee('>Sửa</button>', false)
+            ->assertDontSee('>Khóa</button>', false)
+            ->assertDontSee('>Mở khóa</button>', false);
+    }
+
+    public function test_product_table_headers_and_actions_align_left_in_uppercase_style(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $admin = User::factory()->create();
+        $admin->assignRole('super-admin');
+        Product::factory()->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.products.index'))
+            ->assertOk()
+            ->assertSee('bg-slate-50 text-left text-xs font-bold uppercase tracking-wider', false)
+            ->assertSee('<th class="min-w-56 px-4 py-3">Thao tác</th>', false)
+            ->assertSee('class="flex flex-wrap justify-start gap-2"', false)
+            ->assertDontSee('px-4 py-3 text-center">Thao tác', false);
+    }
+
+    public function test_every_admin_password_field_has_the_shared_visibility_toggle(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $admin = User::factory()->create();
+        $admin->assignRole('super-admin');
+
+        $this->actingAs($admin)
+            ->get(route('admin.profile'))
+            ->assertOk()
+            ->assertSee('aria-controls="current-password"', false)
+            ->assertSee('aria-controls="new-password"', false)
+            ->assertSee('aria-controls="password-confirmation"', false)
+            ->assertSee('data-password-eye-open', false)
+            ->assertSee('data-password-eye-closed', false);
+
+        Livewire::test(UserIndex::class)
+            ->call('create')
+            ->assertSee('aria-controls="user-password"', false)
+            ->assertSee('aria-controls="user-password-confirm"', false)
+            ->assertSee('data-password-toggle', false);
+    }
+
+    public function test_dashboard_public_lookup_url_is_a_clickable_external_link(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $admin = User::factory()->create();
+        $admin->assignRole('super-admin');
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('href="'.route('warranty.check').'"', false)
+            ->assertSee('target="_blank"', false)
+            ->assertSee('rel="noopener noreferrer"', false);
     }
 
     public function test_activity_table_uses_the_same_created_time_format(): void

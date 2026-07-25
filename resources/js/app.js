@@ -1,30 +1,36 @@
 import './bootstrap';
 
-document.querySelectorAll('[data-password-toggle]').forEach((button) => {
-    const input = document.getElementById(button.getAttribute('aria-controls'));
+document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) {
+        return;
+    }
 
-    if (!(input instanceof HTMLInputElement)) {
+    const button = event.target.closest('[data-password-toggle]');
+
+    if (!(button instanceof HTMLButtonElement)) {
+        return;
+    }
+
+    const controlledInputId = button.getAttribute('aria-controls');
+    const field = button.closest('[data-password-field]');
+    const input = field?.querySelector('input');
+
+    if (!(input instanceof HTMLInputElement) || input.id !== controlledInputId) {
         return;
     }
 
     const eyeOpen = button.querySelector('[data-password-eye-open]');
     const eyeClosed = button.querySelector('[data-password-eye-closed]');
+    const visible = input.type === 'password';
+    const label = visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu';
 
-    const setPasswordVisible = (visible) => {
-        const label = visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu';
-
-        input.type = visible ? 'text' : 'password';
-        button.setAttribute('aria-label', label);
-        button.setAttribute('aria-pressed', String(visible));
-        button.setAttribute('title', label);
-        eyeOpen?.classList.toggle('hidden', visible);
-        eyeClosed?.classList.toggle('hidden', !visible);
-    };
-
-    button.addEventListener('click', () => {
-        setPasswordVisible(input.type === 'password');
-        input.focus();
-    });
+    input.type = visible ? 'text' : 'password';
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', String(visible));
+    button.setAttribute('title', label);
+    eyeOpen?.classList.toggle('hidden', visible);
+    eyeClosed?.classList.toggle('hidden', !visible);
+    input.focus();
 });
 
 document.querySelectorAll('[data-login-form]').forEach((form) => {

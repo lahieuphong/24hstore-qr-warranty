@@ -25,7 +25,7 @@
                         <th class="px-5 py-3">Vai trò</th>
                         <th class="px-5 py-3">Trạng thái</th>
                         <th class="min-w-40 px-5 py-3">Thời gian</th>
-                        <th class="px-5 py-3 text-right">Thao tác</th>
+                        <th class="px-5 py-3">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -54,10 +54,24 @@
                                 {{ $user->created_at?->format('d/m/Y H:i') ?? 'Không có' }}
                             </td>
                             <td class="px-5 py-4">
-                                <div class="flex justify-end gap-2">
-                                    <button type="button" wire:click="edit({{ $user->id }})" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">Sửa</button>
-                                    <button type="button" wire:click="toggleActive({{ $user->id }})" class="rounded-lg border px-3 py-2 text-xs font-bold {{ $user->is_active ? 'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100' : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}">
-                                        {{ $user->is_active ? 'Khóa' : 'Mở khóa' }}
+                                <div class="flex justify-start gap-2">
+                                    @if (! $user->is_environment_admin || config('admin.environment_admin_editable', false))
+                                        <button type="button" wire:click="edit({{ $user->id }})" class="admin-icon-action" aria-label="Sửa tài khoản {{ $user->name }}" title="Sửa tài khoản">
+                                            <x-lucide-pencil class="size-4" aria-hidden="true" />
+                                        </button>
+                                    @endif
+                                    <button
+                                        type="button"
+                                        wire:click="toggleActive({{ $user->id }})"
+                                        class="admin-icon-action {{ $user->is_active ? 'admin-icon-action-danger' : 'admin-icon-action-success' }}"
+                                        aria-label="{{ $user->is_active ? 'Khóa' : 'Mở khóa' }} tài khoản {{ $user->name }}"
+                                        title="{{ $user->is_active ? 'Khóa tài khoản' : 'Mở khóa tài khoản' }}"
+                                    >
+                                        @if ($user->is_active)
+                                            <x-lucide-lock-keyhole class="size-4" aria-hidden="true" />
+                                        @else
+                                            <x-lucide-lock-keyhole-open class="size-4" aria-hidden="true" />
+                                        @endif
                                     </button>
                                 </div>
                             </td>
@@ -119,12 +133,12 @@
                         </div>
                         <div>
                             <label for="user-password" class="form-label">Mật khẩu {{ $editingId ? '(để trống nếu không đổi)' : '*' }}</label>
-                            <input id="user-password" type="password" wire:model="password" class="form-input" autocomplete="new-password">
+                            <x-password-input id="user-password" wire:model="password" autocomplete="new-password" />
                             @error('password') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="user-password-confirm" class="form-label">Nhập lại mật khẩu</label>
-                            <input id="user-password-confirm" type="password" wire:model="password_confirmation" class="form-input" autocomplete="new-password">
+                            <x-password-input id="user-password-confirm" wire:model="password_confirmation" autocomplete="new-password" />
                         </div>
                     </div>
 

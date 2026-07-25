@@ -85,6 +85,33 @@ class UiIconRegressionTest extends TestCase
         $this->assertStringNotContainsString('$wire.$set(', $source);
     }
 
+    public function test_all_password_inputs_use_the_shared_lucide_toggle_component(): void
+    {
+        $violations = [];
+
+        foreach (File::allFiles(resource_path('views')) as $file) {
+            $relativePath = $file->getRelativePathname();
+
+            if ($relativePath === 'components/password-input.blade.php') {
+                continue;
+            }
+
+            if (preg_match('/type\s*=\s*["\']password["\']/i', File::get($file->getPathname())) === 1) {
+                $violations[] = $relativePath;
+            }
+        }
+
+        $component = File::get(resource_path('views/components/password-input.blade.php'));
+        $javascript = File::get(resource_path('js/app.js'));
+
+        $this->assertSame([], $violations, 'Password inputs bypassing the shared toggle: '.implode(', ', $violations));
+        $this->assertStringContainsString('<x-lucide-eye ', $component);
+        $this->assertStringContainsString('<x-lucide-eye-off ', $component);
+        $this->assertStringContainsString("document.addEventListener('click'", $javascript);
+        $this->assertStringContainsString("event.target.closest('[data-password-toggle]')", $javascript);
+        $this->assertStringNotContainsString("document.querySelectorAll('[data-password-toggle]').forEach", $javascript);
+    }
+
     /** @return array<string, string> */
     private function uiSourceFiles(): array
     {

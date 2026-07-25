@@ -111,7 +111,17 @@
                     </div>
                     <div class="bg-white p-4 sm:col-span-2 xl:col-span-4">
                         <dt class="django-detail-label">Trang tra cứu công khai</dt>
-                        <dd class="mt-2 break-all font-mono text-xs text-slate-600">{{ $system['public_lookup_url'] }}</dd>
+                        <dd class="mt-2">
+                            <a
+                                href="{{ $system['public_lookup_url'] }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex max-w-full items-center gap-1.5 break-all font-mono text-xs font-semibold text-rose-700 underline decoration-rose-300 underline-offset-4 transition hover:text-rose-900 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2"
+                            >
+                                <span>{{ $system['public_lookup_url'] }}</span>
+                                <x-lucide-external-link class="size-3.5 shrink-0" aria-hidden="true" />
+                            </a>
+                        </dd>
                     </div>
                 </dl>
             </section>

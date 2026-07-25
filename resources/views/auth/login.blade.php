@@ -53,21 +53,14 @@
                     </div>
                     <div>
                         <label for="password" class="form-label">Mật khẩu</label>
-                        <div class="relative">
-                            <input id="password" name="password" type="password" required autocomplete="current-password" class="form-input form-input-trailing-icon login-password-input" placeholder="Nhập mật khẩu...">
-                            <button
-                                type="button"
-                                data-password-toggle
-                                aria-controls="password"
-                                aria-label="Hiện mật khẩu"
-                                aria-pressed="false"
-                                title="Hiện mật khẩu"
-                                class="absolute inset-y-0 right-0 inline-flex w-11 items-center justify-center rounded-r-md text-slate-400 transition hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-rose-300"
-                            >
-                                <x-lucide-eye data-password-eye-open class="size-5" aria-hidden="true" />
-                                <x-lucide-eye-off data-password-eye-closed class="hidden size-5" aria-hidden="true" />
-                            </button>
-                        </div>
+                        <x-password-input
+                            id="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="login-password-input"
+                            placeholder="Nhập mật khẩu..."
+                        />
                     </div>
                     <label class="flex cursor-pointer items-center gap-3 text-sm text-slate-600">
                         <input name="remember" type="checkbox" value="1" class="login-checkbox" @checked(old('remember'))>
