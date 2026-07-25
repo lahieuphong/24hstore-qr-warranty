@@ -34,6 +34,9 @@ class AdminDashboardTest extends TestCase
             ->assertSee('Xin chào,')
             ->assertSee('Administration')
             ->assertSee('Bảo hành &amp; kho', false)
+            ->assertSee('Lịch sử nhập dữ liệu')
+            ->assertSee('Nhập sản phẩm từ Excel và theo dõi lỗi theo từng dòng')
+            ->assertDontSee('Lô import')
             ->assertSee('Xác thực &amp; phân quyền', false)
             ->assertSee('Hoạt động gần đây')
             ->assertSee('Thêm sản phẩm kiểm thử.');
