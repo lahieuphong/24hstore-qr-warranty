@@ -70,6 +70,13 @@ class Index extends Component
         $this->dispatch('template-preview-closed');
     }
 
+    public function clearFailedUpload(): void
+    {
+        $this->authorize('products.import');
+
+        $this->reset('file');
+    }
+
     public function render(): View
     {
         $template = new ProductsTemplateExport;

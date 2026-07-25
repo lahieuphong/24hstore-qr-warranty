@@ -25,28 +25,267 @@
     </div>
 
     <div class="grid gap-6 xl:grid-cols-3">
-        <section class="card p-6 xl:col-span-2">
+        <section class="card flex h-full flex-col p-6 xl:col-span-2">
             <h2 class="text-lg font-black text-slate-900">Chọn file dữ liệu</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">Giữ nguyên hàng tiêu đề của file mẫu. Nên định dạng cột IMEI là Text để tránh Excel hiển thị dạng số mũ hoặc làm mất số 0 đầu.</p>
 
-            <form wire:submit="import" class="mt-6 space-y-5">
-                <div>
+            <form
+                wire:submit="import"
+                class="mt-6 flex flex-1 flex-col gap-5"
+                data-file-dropzone
+                x-data="{
+                        dragDepth: 0,
+                        isDragging: false,
+                        uploading: false,
+                        resetting: false,
+                        uploadProgress: 0,
+                        fileName: '',
+                        fileSize: '',
+                        statusMessage: 'Chưa chọn tệp',
+                        uploadFeedback: '',
+                        formatFileSize(bytes) {
+                            if (! Number.isFinite(bytes) || bytes <= 0) {
+                                return '';
+                            }
+
+                            if (bytes < 1024 * 1024) {
+                                return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+                            }
+
+                            return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+                        },
+                        rememberFile(file) {
+                            if (! file) {
+                                return;
+                            }
+
+                            this.fileName = file.name;
+                            this.fileSize = this.formatFileSize(file.size);
+                            this.statusMessage = this.uploading
+                                ? `Đang tải ${file.name}`
+                                : `Đã chọn ${file.name}`;
+                            this.uploadFeedback = '';
+                        },
+                        resetFileState(message = 'Chưa chọn tệp', feedback = '') {
+                            this.fileName = '';
+                            this.fileSize = '';
+                            this.uploading = false;
+                            this.uploadProgress = 0;
+                            this.statusMessage = message;
+                            this.uploadFeedback = feedback;
+
+                            if (this.$refs.fileInput) {
+                                this.$refs.fileInput.value = '';
+                            }
+                        },
+                        startUpload() {
+                            this.uploading = true;
+                            this.resetting = false;
+                            this.uploadProgress = 0;
+                            this.isDragging = false;
+                            this.statusMessage = `Đang tải ${this.fileName}`;
+                            this.uploadFeedback = '';
+                        },
+                        finishUpload() {
+                            this.uploading = false;
+                            this.uploadProgress = 100;
+                            this.statusMessage = `Đã tải ${this.fileName}`;
+                        },
+                        failUpload(message) {
+                            this.resetting = true;
+                            this.resetFileState(message, message);
+                        },
+                        beginDrag() {
+                            if (this.uploading || this.resetting) {
+                                return;
+                            }
+
+                            this.dragDepth += 1;
+                            this.isDragging = true;
+                        },
+                        endDrag() {
+                            this.dragDepth = Math.max(0, this.dragDepth - 1);
+
+                            if (this.dragDepth === 0) {
+                                this.isDragging = false;
+                            }
+                        },
+                        receiveDrop(files) {
+                            if (this.uploading || this.resetting) {
+                                return;
+                            }
+
+                            this.dragDepth = 0;
+                            this.isDragging = false;
+
+                            const file = files?.[0];
+
+                            if (! file) {
+                                return;
+                            }
+
+                            this.rememberFile(file);
+
+                            try {
+                                const transfer = new DataTransfer();
+                                transfer.items.add(file);
+                                this.$refs.fileInput.files = transfer.files;
+                            } catch (error) {
+                                try {
+                                    this.$refs.fileInput.files = files;
+                                } catch (assignmentError) {
+                                    this.resetFileState();
+                                    this.$refs.fileInput.click();
+
+                                    return;
+                                }
+                            }
+
+                            this.$refs.fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+                        },
+                    }"
+                    x-init="$wire.$watch('file', (value) => {
+                        if (! value && ! uploading && ! uploadFeedback) {
+                            resetFileState();
+                        }
+                    })"
+                >
+                <div class="flex flex-1 flex-col">
                     <label for="excel-file" class="form-label">File Excel <span class="text-rose-600">*</span></label>
                     <input
                         id="excel-file"
                         type="file"
                         wire:model="file"
+                        x-ref="fileInput"
+                        x-bind:disabled="uploading || resetting"
+                        x-on:change="rememberFile($event.target.files?.[0])"
+                        x-on:livewire-upload-start="startUpload()"
+                        x-on:livewire-upload-progress="uploadProgress = $event.detail.progress"
+                        x-on:livewire-upload-finish="finishUpload()"
+                        x-on:livewire-upload-error="failUpload('Không thể tải tệp lên. Vui lòng chọn lại.'); $wire.clearFailedUpload().then(() => resetting = false)"
+                        x-on:livewire-upload-cancel="failUpload('Đã hủy tải tệp. Vui lòng chọn lại.'); $wire.clearFailedUpload().then(() => resetting = false)"
                         accept=".xlsx,.xls,.csv"
-                        class="block w-full rounded-md border border-dashed border-slate-300 bg-rose-50/50 px-4 py-6 text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-rose-700 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-rose-800"
+                        class="peer sr-only"
+                        data-file-input
+                        aria-describedby="excel-file-help excel-file-status{{ $errors->has('file') ? ' excel-file-error' : '' }}"
+                        @if ($errors->has('file')) aria-invalid="true" @endif
                     >
-                    @error('file') <p class="mt-2 text-xs text-rose-600">{{ $message }}</p> @enderror
-                    <p wire:loading wire:target="file" class="mt-2 text-xs font-semibold text-rose-700">Đang tải file lên...</p>
+
+                    <label
+                        for="excel-file"
+                        class="group relative flex min-h-64 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed px-5 py-8 text-center transition duration-200 peer-focus-visible:outline-none peer-focus-visible:ring-4 peer-focus-visible:ring-rose-100 sm:min-h-72 sm:px-8 {{ $errors->has('file') ? 'border-rose-400 bg-rose-50/70' : 'border-slate-300 bg-gradient-to-br from-white via-rose-50/45 to-slate-50 hover:border-rose-400 hover:bg-rose-50/70' }}"
+                        x-bind:class="{
+                            'scale-[1.01] border-rose-500 bg-rose-50 shadow-lg shadow-rose-950/10': isDragging,
+                            'cursor-wait opacity-75': uploading || resetting,
+                        }"
+                        x-bind:aria-disabled="uploading || resetting ? 'true' : 'false'"
+                        x-on:click="if (uploading || resetting) $event.preventDefault()"
+                        x-on:dragenter.prevent.stop="beginDrag()"
+                        x-on:dragover.prevent.stop="if (! uploading && ! resetting) isDragging = true"
+                        x-on:dragleave.prevent.stop="endDrag()"
+                        x-on:drop.prevent.stop="receiveDrop($event.dataTransfer.files)"
+                        data-file-drop-target
+                    >
+                        <div
+                            class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(190,18,60,0.09),_transparent_50%)] opacity-0 transition duration-200"
+                            x-bind:class="{ 'opacity-100': isDragging }"
+                            aria-hidden="true"
+                        ></div>
+
+                        <div class="relative mx-auto w-full max-w-xl">
+                            <div x-show="! fileName" class="flex flex-col items-center">
+                                <span
+                                    class="grid size-16 place-items-center rounded-2xl bg-white text-rose-700 shadow-sm ring-1 ring-slate-200 transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-md"
+                                    x-bind:class="{ '-translate-y-1 scale-105 text-rose-800 shadow-md ring-rose-200': isDragging }"
+                                    aria-hidden="true"
+                                >
+                                    <x-lucide-cloud-upload class="size-8" />
+                                </span>
+                                <p class="mt-5 text-base font-black text-slate-900 sm:text-lg">
+                                    <span x-show="! isDragging">Kéo và thả file Excel vào đây</span>
+                                    <span x-cloak x-show="isDragging">Thả file để bắt đầu tải lên</span>
+                                </p>
+                                <p class="mt-2 text-sm text-slate-500">hoặc chọn file trực tiếp từ thiết bị của bạn</p>
+                                <span class="pointer-events-auto mt-5 inline-flex items-center gap-2 rounded-lg bg-rose-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition group-hover:bg-rose-800">
+                                    <x-lucide-folder-open class="size-4" aria-hidden="true" />
+                                    Chọn tệp
+                                </span>
+                                <p id="excel-file-help" class="mt-4 text-xs font-medium text-slate-500">Hỗ trợ XLSX, XLS, CSV · Tối đa 10 MB</p>
+                            </div>
+
+                            <div x-cloak x-show="fileName" class="flex flex-col items-center">
+                                <span class="grid size-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" aria-hidden="true">
+                                    <x-lucide-file-spreadsheet class="size-8" />
+                                </span>
+                                <p class="mt-5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+                                    <span x-show="! uploading">Tệp đã sẵn sàng</span>
+                                    <span x-show="uploading">Đang tải tệp lên</span>
+                                </p>
+                                <p class="mt-2 max-w-full truncate text-base font-black text-slate-900 sm:text-lg" x-text="fileName"></p>
+                                <p class="mt-1 text-sm text-slate-500" x-text="fileSize"></p>
+                                <span class="pointer-events-auto mt-5 inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition group-hover:border-rose-300 group-hover:text-rose-800">
+                                    <x-lucide-refresh-cw class="size-4" aria-hidden="true" />
+                                    Chọn tệp khác
+                                </span>
+                            </div>
+
+                            <div
+                                x-cloak
+                                x-show="uploading"
+                                class="mx-auto mt-5 max-w-sm"
+                                role="progressbar"
+                                aria-label="Tiến độ tải tệp"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                x-bind:aria-valuenow="uploadProgress"
+                            >
+                                <div class="h-1.5 overflow-hidden rounded-full bg-rose-100">
+                                    <div
+                                        class="h-full rounded-full bg-rose-700 transition-[width] duration-150"
+                                        x-bind:style="`width: ${uploadProgress}%`"
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <p id="excel-file-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true">
+                                <span x-text="statusMessage"></span>
+                            </p>
+                        </div>
+                    </label>
+
+                    <p
+                        x-cloak
+                        x-show="uploadFeedback"
+                        x-text="uploadFeedback"
+                        class="mt-2 flex items-center gap-1.5 text-xs font-semibold text-rose-700"
+                    ></p>
+
+                    @error('file')
+                        <p id="excel-file-error" class="mt-2 flex items-center gap-1.5 text-xs font-semibold text-rose-700">
+                            <x-lucide-circle-alert class="size-4 shrink-0" aria-hidden="true" />
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
-                <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="import,file">
-                    <span wire:loading.remove wire:target="import">Bắt đầu import</span>
-                    <span wire:loading wire:target="import">Đang xử lý...</span>
-                </button>
+                <div class="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="flex items-center gap-2 text-xs leading-5 text-slate-500">
+                        <x-lucide-shield-check class="size-4 shrink-0 text-emerald-600" aria-hidden="true" />
+                        File chỉ được dùng để nhập dữ liệu vào hệ thống.
+                    </p>
+                    <button
+                        type="submit"
+                        class="btn-primary shrink-0 px-6 py-3"
+                        x-bind:disabled="uploading || resetting"
+                        wire:loading.attr="disabled"
+                        wire:target="import,file,clearFailedUpload"
+                    >
+                        <x-lucide-file-up class="size-4" wire:loading.remove wire:target="import" aria-hidden="true" />
+                        <x-lucide-loader-circle class="size-4 motion-safe:animate-spin" wire:loading wire:target="import" aria-hidden="true" />
+                        <span wire:loading.remove wire:target="import">Bắt đầu import</span>
+                        <span wire:loading wire:target="import">Đang xử lý...</span>
+                    </button>
+                </div>
             </form>
         </section>
 
@@ -159,7 +398,7 @@
             <section class="flex max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-950/25 sm:max-h-[calc(100dvh-3rem)]">
                 <header class="flex shrink-0 items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-6 sm:py-5">
                     <div class="flex min-w-0 items-start gap-3.5">
-                        <div class="grid size-11 shrink-0 place-items-center rounded-2xl bg-rose-100 text-rose-700 ring-4 ring-rose-50">
+                        <div class="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#e8f5ed] text-[#217346] ring-4 ring-[#f3f8f5]">
                             <x-lucide-file-spreadsheet class="size-6" aria-hidden="true" />
                         </div>
                         <div class="min-w-0">

@@ -238,6 +238,42 @@ class AdminChromeTest extends TestCase
         );
     }
 
+    public function test_import_page_has_an_accessible_drag_and_drop_file_picker(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get(route('admin.imports.index'))
+            ->assertOk()
+            ->assertSee('data-file-dropzone', false)
+            ->assertSee('data-file-drop-target', false)
+            ->assertSee('data-file-input', false)
+            ->assertSee('x-on:dragenter.prevent.stop', false)
+            ->assertSee('x-on:dragover.prevent.stop', false)
+            ->assertSee('x-on:dragleave.prevent.stop', false)
+            ->assertSee('x-on:drop.prevent.stop', false)
+            ->assertSee('x-bind:disabled="uploading || resetting"', false)
+            ->assertSee('$wire.clearFailedUpload().then(() => resetting = false)', false)
+            ->assertSee('Kéo và thả file Excel vào đây')
+            ->assertSee('Thả file để bắt đầu tải lên')
+            ->assertSee('Chọn tệp')
+            ->assertSee('Chọn tệp khác')
+            ->assertSee('Hỗ trợ XLSX, XLS, CSV · Tối đa 10 MB')
+            ->assertSee('id="excel-file"', false)
+            ->assertSee('accept=".xlsx,.xls,.csv"', false)
+            ->assertSee('class="peer sr-only"', false)
+            ->assertSee('role="progressbar"', false)
+            ->assertSee('x-bind:aria-valuenow="uploadProgress"', false)
+            ->assertSee('aria-live="polite"', false);
+
+        Livewire::test(ImportIndex::class)
+            ->set('file', 'stale-upload')
+            ->call('clearFailedUpload')
+            ->assertSet('file', null);
+    }
+
     public function test_selected_products_replace_the_result_toolbar_actions(): void
     {
         $this->seed(RolePermissionSeeder::class);
