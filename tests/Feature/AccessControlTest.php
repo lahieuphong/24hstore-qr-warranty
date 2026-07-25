@@ -26,6 +26,10 @@ class AccessControlTest extends TestCase
             ->assertForbidden();
 
         $this->actingAs($user)
+            ->get(route('admin.imports.template'))
+            ->assertForbidden();
+
+        $this->actingAs($user)
             ->get(route('admin.users.index'))
             ->assertForbidden();
 

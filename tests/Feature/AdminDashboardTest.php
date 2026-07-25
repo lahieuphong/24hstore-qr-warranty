@@ -33,6 +33,7 @@ class AdminDashboardTest extends TestCase
             ->assertSee('laravel-logo.svg')
             ->assertSee('Xin chào,')
             ->assertSee('Administration')
+            ->assertDontSee('Xem trang tra cứu')
             ->assertSee('Bảo hành &amp; kho', false)
             ->assertSee('Lịch sử nhập dữ liệu')
             ->assertSee('Nhập sản phẩm từ Excel và theo dõi lỗi theo từng dòng')

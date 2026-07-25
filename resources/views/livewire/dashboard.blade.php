@@ -1,17 +1,11 @@
 <div class="space-y-6">
     <x-flash />
 
-    <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
+    <div class="border-b border-slate-200 pb-5">
         <div>
             <p class="text-xs font-bold uppercase tracking-[0.14em] text-rose-700">Administration</p>
             <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-800 sm:text-3xl">Quản trị hệ thống</h1>
             <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">Chọn một chức năng bên dưới để xem, thêm hoặc thay đổi dữ liệu bảo hành.</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-            <a href="{{ route('warranty.check') }}" target="_blank" rel="noopener" class="btn-secondary">
-                Xem trang tra cứu
-                <x-lucide-external-link class="size-4" aria-hidden="true" />
-            </a>
         </div>
     </div>
 

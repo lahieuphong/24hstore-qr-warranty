@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Exports\ProductsTemplateExport;
 use App\Livewire\ActivityLogs\Index as ActivityLogIndex;
+use App\Livewire\Imports\Index as ImportIndex;
 use App\Livewire\Products\Index as ProductIndex;
 use App\Models\AdminActivityLog;
 use App\Models\Product;
@@ -10,6 +12,7 @@ use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
 class AdminChromeTest extends TestCase
@@ -178,6 +181,58 @@ class AdminChromeTest extends TestCase
             ->call('closeDownload')
             ->assertSet('showDownloadModal', false)
             ->assertSet('downloadProductId', null);
+    }
+
+    public function test_import_template_is_previewed_before_the_xlsx_download(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportIndex::class)
+            ->assertSet('showTemplatePreview', false)
+            ->assertSee('Tải file mẫu XLSX')
+            ->assertSee('aria-haspopup="dialog"', false)
+            ->assertSee('aria-expanded="false"', false)
+            ->assertDontSee('File mẫu import sản phẩm')
+            ->call('openTemplatePreview')
+            ->assertSet('showTemplatePreview', true)
+            ->assertSee('aria-expanded="true"', false)
+            ->assertSee('File mẫu import sản phẩm')
+            ->assertSee('Bản xem trước nội dung file mẫu XLSX')
+            ->assertSee('Mã hàng')
+            ->assertSee('Tên hàng')
+            ->assertSee('IMEI')
+            ->assertSee('Ngày nhập')
+            ->assertSee('Thời hạn bảo hành')
+            ->assertSee('IP15-128-BLK')
+            ->assertSee('Điện thoại mẫu 128GB')
+            ->assertSee('012345678901234')
+            ->assertSee('15/07/2026')
+            ->assertSee('href="'.route('admin.imports.template').'"', false)
+            ->assertSee('download="mau-import-san-pham.xlsx"', false)
+            ->assertSee('Tải file về máy')
+            ->assertSee('x-trap.inert.noscroll="true"', false)
+            ->call('closeTemplatePreview')
+            ->assertSet('showTemplatePreview', false)
+            ->assertDispatched('template-preview-closed');
+
+        Excel::fake();
+
+        $this->get(route('admin.imports.template'))->assertOk();
+
+        Excel::assertDownloaded(
+            'mau-import-san-pham.xlsx',
+            fn (ProductsTemplateExport $export): bool => $export->headings() === [
+                'Mã hàng',
+                'Tên hàng',
+                'IMEI',
+                'Ngày nhập',
+                'Thời hạn bảo hành',
+            ],
+        );
     }
 
     public function test_selected_products_replace_the_result_toolbar_actions(): void

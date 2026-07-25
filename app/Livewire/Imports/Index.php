@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Imports;
 
+use App\Exports\ProductsTemplateExport;
 use App\Models\ImportBatch;
 use App\Services\ProductImportService;
+use DateTimeInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -21,6 +23,8 @@ class Index extends Component
     public mixed $file = null;
 
     public ?int $latestBatchId = null;
+
+    public bool $showTemplatePreview = false;
 
     public function mount(): void
     {
@@ -53,8 +57,23 @@ class Index extends Component
         );
     }
 
+    public function openTemplatePreview(): void
+    {
+        $this->authorize('products.import');
+
+        $this->showTemplatePreview = true;
+    }
+
+    public function closeTemplatePreview(): void
+    {
+        $this->showTemplatePreview = false;
+        $this->dispatch('template-preview-closed');
+    }
+
     public function render(): View
     {
+        $template = new ProductsTemplateExport;
+
         return view('livewire.imports.index', [
             'latestBatch' => $this->latestBatchId
                 ? ImportBatch::query()->find($this->latestBatchId)
@@ -63,6 +82,16 @@ class Index extends Component
                 ->with('user:id,name')
                 ->latest()
                 ->paginate(10),
+            'templateHeadings' => $template->headings(),
+            'templateRows' => array_map(
+                static fn (array $row): array => array_map(
+                    static fn (mixed $value): string => $value instanceof DateTimeInterface
+                        ? $value->format('d/m/Y')
+                        : (string) $value,
+                    $row,
+                ),
+                $template->array(),
+            ),
         ]);
     }
 }
